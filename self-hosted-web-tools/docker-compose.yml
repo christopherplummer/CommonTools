@@ -1,0 +1,83 @@
+services:
+  app:
+    build: .
+    init: true
+    env_file: .env
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      SEARXNG_BASE_URL: http://searxng:8080
+      DOWNLOAD_DIRECTORY: /data/downloads
+      DATABASE_URL: sqlite:////data/webtools.db
+    network_mode: service:egress
+    volumes:
+      - webtools-data:/data
+    tmpfs:
+      - /tmp:size=256m,mode=1777
+    read_only: true
+    shm_size: 256mb
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    pids_limit: 256
+    depends_on:
+      egress:
+        condition: service_healthy
+      searxng:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=35)"]
+      interval: 60s
+      timeout: 40s
+      start_period: 30s
+      retries: 3
+  egress:
+    build: ./config/egress
+    init: true
+    environment:
+      SEARXNG_IP: 172.30.95.2
+    ports:
+      - "127.0.0.1:${APP_PORT:-8000}:8000"
+    networks:
+      search-backend:
+        ipv4_address: 172.30.95.3
+      outbound: {}
+    cap_drop: [ALL]
+    cap_add: [NET_ADMIN]
+    security_opt: [no-new-privileges:true]
+    read_only: true
+    tmpfs:
+      - /tmp:size=1m
+    healthcheck:
+      test: ["CMD", "test", "-f", "/tmp/firewall-ready"]
+      interval: 5s
+      retries: 3
+  searxng:
+    image: searxng/searxng@sha256:a7f9188cc7fa8b6b037e0d85709c0dced8f05d0eba84145eb7fe7027a4c00850
+    environment:
+      SEARXNG_SECRET: ${SEARXNG_SECRET:?Set SEARXNG_SECRET in .env}
+    volumes:
+      - ./config/searxng:/etc/searxng:ro
+    networks:
+      search-backend:
+        ipv4_address: 172.30.95.2
+      search-outbound: {}
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+volumes:
+  webtools-data:
+networks:
+  search-backend:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.30.95.0/24
+  outbound:
+    driver: bridge
+  search-outbound:
+    driver: bridge
