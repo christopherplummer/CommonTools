@@ -7,6 +7,7 @@ A collection of self-hosted tools for local language models and agent applicatio
 | Project | Description |
 | --- | --- |
 | [Self-hosted Web Tools](self-hosted-web-tools/README.md) | Authenticated REST and MCP tools for web search, page and PDF text extraction, Chromium browsing, and persistent downloads. |
+| [Weather & Fishing MCP](weather-fishing-mcp/README.md) | Structured weather, marine, tide/current, astronomy, solunar and marine-species tools with independent provider adapters, coverage reporting and access gates. |
 
 Each project keeps its source, deployment configuration, tests, and documentation
 in its own directory. This folder is the Git repository root.

@@ -1,0 +1,347 @@
+{
+  "checked_at": "2026-10-13T12:36:30.383804+00:00",
+  "fixture_data_used": false,
+  "checks": [
+    {
+      "check": "nws_station_discovery",
+      "verified": true,
+      "status": "partial",
+      "record_count": 5,
+      "source_url": "https://api.weather.gov/gridpoints/LWX/98,72/stations",
+      "retrieved_at": "2026-10-13T12:36:31.409872+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {},
+      "kind": "discovery"
+    },
+    {
+      "check": "nws_forecast",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://api.weather.gov/gridpoints/LWX/98,72/forecast?units=si",
+      "retrieved_at": "2026-10-13T12:36:32.412068+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {
+        "temperature": "degC",
+        "windSpeed": "km/h text",
+        "dewpoint": "source wmoUnit",
+        "relativeHumidity": "percent",
+        "probabilityOfPrecipitation": "percent"
+      },
+      "kind": "forecast"
+    },
+    {
+      "check": "nws_active_alerts",
+      "verified": true,
+      "status": "complete",
+      "record_count": 0,
+      "source_url": "https://api.weather.gov/alerts?point=38.9000%2C-77.0000&active=true",
+      "retrieved_at": "2026-10-13T12:36:33.548330+00:00",
+      "reasons": [],
+      "missing_fields": [],
+      "units": {
+        "description": "source text"
+      },
+      "kind": "information"
+    },
+    {
+      "check": "nws_recent_observations",
+      "verified": true,
+      "status": "partial",
+      "record_count": 2,
+      "source_url": "https://api.weather.gov/stations/KDCA/observations?limit=500",
+      "retrieved_at": "2026-10-13T12:36:35.770288+00:00",
+      "reasons": [
+        "Upstream observations truncated; narrow the date range",
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {
+        "temperature": "wmoUnit:degC",
+        "dewpoint": "wmoUnit:degC",
+        "windSpeed": "wmoUnit:km_h-1",
+        "windDirection": "wmoUnit:degree_(angle)",
+        "windGust": "wmoUnit:km_h-1",
+        "barometricPressure": "wmoUnit:Pa",
+        "seaLevelPressure": "wmoUnit:Pa",
+        "relativeHumidity": "wmoUnit:percent"
+      },
+      "kind": "observation"
+    },
+    {
+      "check": "nws_marine_zone",
+      "verified": true,
+      "status": "partial",
+      "record_count": 2,
+      "source_url": "https://api.weather.gov/zones/forecast/ANZ230/forecast",
+      "retrieved_at": "2026-10-13T12:36:37.414406+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {
+        "detailedForecast": "source text"
+      },
+      "kind": "forecast"
+    },
+    {
+      "check": "nws_marine_grid",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://api.weather.gov/gridpoints/BOX/88,99",
+      "retrieved_at": "2026-10-13T12:36:39.427464+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {
+        "waveHeight": "wmoUnit:m",
+        "windSpeed": "wmoUnit:km_h-1"
+      },
+      "kind": "forecast"
+    },
+    {
+      "check": "coops_station_discovery",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=tidepredictions",
+      "retrieved_at": "2026-10-13T12:36:39.712939+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [
+        "observes_dst",
+        "source_standard_timezone",
+        "tidal"
+      ],
+      "units": {},
+      "kind": "discovery"
+    },
+    {
+      "check": "coops_tide_predictions",
+      "verified": true,
+      "status": "complete",
+      "record_count": 7,
+      "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=8443970&product=predictions&time_zone=gmt&units=metric&format=json&application=CommonTools_WeatherFishing&datum=MLLW&interval=hilo&begin_date=20250401+00%3A00&end_date=20250402+23%3A59",
+      "retrieved_at": "2026-10-13T12:36:42.533858+00:00",
+      "reasons": [],
+      "missing_fields": [],
+      "units": {
+        "height": "m"
+      },
+      "kind": "prediction"
+    },
+    {
+      "check": "coops_water_level_history",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=8443970&product=hourly_height&time_zone=gmt&units=metric&format=json&application=CommonTools_WeatherFishing&datum=MLLW&begin_date=20250401+00%3A00&end_date=20250401+23%3A59",
+      "retrieved_at": "2026-10-13T12:36:43.488772+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [
+        "quality"
+      ],
+      "units": {
+        "height": "m"
+      },
+      "kind": "observation"
+    },
+    {
+      "check": "coops_current_predictions",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=EPT0003&product=currents_predictions&time_zone=gmt&units=metric&format=json&application=CommonTools_WeatherFishing&bin=14&vel_type=speed_dir&interval=10&begin_date=20250401+00%3A00&end_date=20250401+23%3A59",
+      "retrieved_at": "2026-10-13T12:36:46.531360+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {
+        "speed": "cm/s",
+        "direction": "degrees",
+        "velocity_major": "cm/s",
+        "depth": "source"
+      },
+      "kind": "prediction"
+    },
+    {
+      "check": "coops_current_observations",
+      "verified": false,
+      "status": "unavailable",
+      "record_count": 0,
+      "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/",
+      "retrieved_at": null,
+      "reasons": [
+        "product_unavailable: No data was found. This product may not be offered at this station at the requested time."
+      ],
+      "missing_fields": [],
+      "units": {},
+      "kind": "observation"
+    },
+    {
+      "check": "coops_historical_currents",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=CFR1624&product=currents&time_zone=gmt&units=metric&format=json&application=CommonTools_WeatherFishing&bin=9&begin_date=20160401+00%3A00&end_date=20160401+23%3A59",
+      "retrieved_at": "2026-10-13T12:36:52.555305+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {
+        "speed": "cm/s",
+        "direction": "degrees",
+        "velocity_major": "cm/s",
+        "depth": "source"
+      },
+      "kind": "observation"
+    },
+    {
+      "check": "ndbc_station_discovery",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://www.ndbc.noaa.gov/activestations.xml",
+      "retrieved_at": "2026-10-13T12:36:52.650332+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {},
+      "kind": "discovery"
+    },
+    {
+      "check": "ndbc_realtime",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://www.ndbc.noaa.gov/data/realtime2/41009.txt",
+      "retrieved_at": "2026-10-13T12:36:53.576555+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [
+        "WSPD",
+        "WTMP",
+        "WVHT"
+      ],
+      "units": {
+        "WDIR": "degrees true",
+        "WSPD": "m/s",
+        "GST": "m/s",
+        "WVHT": "m",
+        "DPD": "s",
+        "APD": "s",
+        "MWD": "degrees true",
+        "PRES": "hPa",
+        "ATMP": "degC",
+        "WTMP": "degC",
+        "DEWP": "degC",
+        "VIS": "km",
+        "PTDY": "hPa",
+        "TIDE": "m"
+      },
+      "kind": "observation"
+    },
+    {
+      "check": "ndbc_2025_archive",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://www.ndbc.noaa.gov/data/historical/stdmet/41009h2025.txt.gz",
+      "retrieved_at": "2026-10-13T12:36:54.601361+00:00",
+      "reasons": [
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [
+        "WTMP",
+        "WVHT"
+      ],
+      "units": {
+        "WDIR": "degrees true",
+        "WSPD": "m/s",
+        "GST": "m/s",
+        "WVHT": "m",
+        "DPD": "s",
+        "APD": "s",
+        "MWD": "degrees true",
+        "PRES": "hPa",
+        "ATMP": "degC",
+        "WTMP": "degC",
+        "DEWP": "degC",
+        "VIS": "km",
+        "TIDE": "m"
+      },
+      "kind": "observation"
+    },
+    {
+      "check": "fisheries_species",
+      "verified": true,
+      "status": "complete",
+      "record_count": 1,
+      "source_url": "https://www.fisheries.noaa.gov/species/atlantic-cod",
+      "retrieved_at": "2026-10-13T12:36:57.835174+00:00",
+      "reasons": [],
+      "missing_fields": [],
+      "units": {
+        "text": "source prose; quantities retain source units"
+      },
+      "kind": "information"
+    },
+    {
+      "check": "fisheries_directory",
+      "verified": true,
+      "status": "partial",
+      "record_count": 3,
+      "source_url": "https://www.fisheries.noaa.gov/species-directory",
+      "retrieved_at": "2026-10-13T12:36:57.884129+00:00",
+      "reasons": [
+        "Directory may have additional dynamic/paginated listings",
+        "Response page truncated; continue with next_offset"
+      ],
+      "missing_fields": [],
+      "units": {},
+      "kind": "discovery"
+    },
+    {
+      "check": "ncei_history",
+      "verified": false,
+      "status": "not_run",
+      "reasons": [
+        "NCEI token not configured"
+      ]
+    },
+    {
+      "check": "solunar_april_2025_public_table_inspection",
+      "verified": true,
+      "status": "complete",
+      "record_count": 30,
+      "source_url": "https://solunarforecast.com/hunting_fishing/best_times/table/united_states/california/beverly_hills/4/2025/",
+      "retrieved_at": "2026-10-13T12:36:58.885223+00:00",
+      "verified_location": {
+        "Countries": "United States",
+        "States": "California",
+        "Cities": "Beverly Hills"
+      },
+      "missing_dates": [],
+      "missing_fields": [],
+      "qualifications": [
+        "Availability/parser verification only, not commercial rights or source timezone verification",
+        "No production permission flag was set; only one public monthly table was inspected"
+      ]
+    }
+  ]
+}

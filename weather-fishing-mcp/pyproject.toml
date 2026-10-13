@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[project]
+name = "weather-fishing-mcp"
+version = "0.1.0"
+description = "Bounded, provenance-preserving weather and fishing tools over MCP"
+requires-python = ">=3.12"
+dependencies = [
+  "mcp>=1.30,<2", "httpx>=0.28,<0.29", "pydantic>=2.14,<3",
+  "pydantic-settings>=2.7,<3", "lxml>=6,<7", "tzdata>=2025.2",
+  "fastapi>=0.115,<1", "uvicorn>=0.34,<1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<10", "pytest-asyncio>=0.25,<2", "ruff>=0.11,<1", "build>=1.2,<2", "hatchling==1.32.4"]
+
+[project.scripts]
+weather-fishing-mcp = "weather_fishing.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/weather_fishing"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/tests", "/scripts", "/docs", "/README.md", "/pyproject.toml", "/requirements.lock", "/.env.example"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
