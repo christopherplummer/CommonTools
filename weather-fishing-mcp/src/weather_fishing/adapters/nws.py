@@ -129,6 +129,7 @@ class NWS(Adapter):
                     time=display(p["startTime"], q.timezone),
                     end_time=display(p["endTime"], q.timezone),
                     source_time=p["startTime"],
+                    source_end_time=p["endTime"],
                     values={k: p.get(k) for k in PERIOD_FIELDS},
                 )
                 for p in data.get("periods", [])
@@ -173,6 +174,7 @@ class NWS(Adapter):
                             time=display(begin, q.timezone),
                             end_time=display(end.isoformat(), q.timezone),
                             source_time=v["validTime"],
+                            source_units={"value": result.units[name]},
                             values={"field": name, "value": v["value"], "unit": result.units[name]},
                         )
                     )

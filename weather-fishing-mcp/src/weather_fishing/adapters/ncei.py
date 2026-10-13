@@ -154,6 +154,8 @@ class NCEI(Adapter):
             rows.append(
                 Record(
                     source_time=r["date"],
+                    source_values=dict(r),
+                    source_units={datatype: unit},
                     values={
                         "datatype": datatype,
                         "value": r["value"],

@@ -7,6 +7,13 @@ written permissions were supplied by the user. Unknown requirements remain unkno
 
 ## Capability and coverage matrix
 
+Global geocoding/timezone providers remain **unselected and unconfigured**. Existing
+NWS point lookup resolves covered submitted coordinates only. The concrete proposed
+integration and its commercial/global requirements are in
+[resolution dependencies](resolution-collection.md#remaining-geographic-integration-dependency).
+Operator-reviewed waterbody/station relationships are also required for automatic
+qualified tide/current selection; provider catalogue distance alone is insufficient.
+
 | Provider | Implemented products | Coverage and activation |
 | --- | --- | --- |
 | NWS | Latest regular/hourly forecast, marine grid/zone forecast, active alerts, recent observations, point-associated stations | US/territory coverage checked by provider; enabled |

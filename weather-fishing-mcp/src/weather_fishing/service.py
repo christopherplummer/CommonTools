@@ -12,6 +12,7 @@ from .adapters.ndbc import NDBC
 from .adapters.nws import NWS
 from .adapters.solunar import Solunar
 from .catalog import CATALOG, enabled
+from .collection import Collector
 from .http import ProviderError, ProviderHTTP
 from .models import (
     AlertsInput,
@@ -28,6 +29,15 @@ from .models import (
     Result,
     SolunarInput,
     TidesInput,
+)
+from .resolution import Resolver
+from .resolution_models import (
+    CollectionInput,
+    ConditionsPackage,
+    ResolutionResult,
+    ResolveInput,
+    StationRequest,
+    StationSelection,
 )
 
 
@@ -48,13 +58,44 @@ class Tool:
 
 
 class Service:
-    def __init__(self, settings, http=None):
+    def __init__(
+        self, settings, http=None, *, geography=None, relationships=None, solunar_localities=None
+    ):
         self.settings = settings
         self.http = http or ProviderHTTP(settings)
         self.adapters = {
             a.provider: a(self.http) for a in [NWS, COOPS, NCEI, NDBC, Fisheries, Solunar]
         }
+        self.resolver = Resolver(self, geography, relationships)
+        self.collector = Collector(self, solunar_localities)
         tools = [
+            Tool(
+                "resolve_location",
+                "Resolve actual geography; ambiguous places require clarification. "
+                "Global geocoding unconfigured; existing NWS lookup covers US coordinates.",
+                ResolveInput,
+                self.resolver.resolve,
+                "information",
+                ResolutionResult,
+            ),
+            Tool(
+                "resolve_station_product",
+                "Qualify a CO-OPS station/product using reviewed area/waterbody "
+                "relationships, provider catalogue, datum, reference metadata and current bin.",
+                StationRequest,
+                self.resolver.select,
+                "information",
+                StationSelection,
+            ),
+            Tool(
+                "collect_resolved_conditions",
+                "Build a bounded versioned factual package from a resolved "
+                "context and local window; independent weather, marine, tides, sun_moon, solunar.",
+                CollectionInput,
+                self.collector.collect,
+                "information",
+                ConditionsPackage,
+            ),
             Tool(
                 "provider_capabilities",
                 "Inspect coverage, supported products, gates and reviewed provider terms.",
@@ -201,6 +242,30 @@ class Service:
 
     async def bundle(self, q):
         results = await asyncio.gather(*[self.call(r.tool, r.arguments) for r in q.requests])
+        bundle = BundleResult(status="partial", results=results)
+        while len(bundle.model_dump_json().encode()) > 120_000:
+            pages = [(i, r) for i, r in enumerate(results) if r.records]
+            if not pages:
+                return BundleResult(
+                    status="unavailable",
+                    results=[
+                        Result(
+                            provider=r.provider,
+                            kind=r.kind,
+                            reasons=["aggregate_metadata_too_large: narrow requests"],
+                        )
+                        for r in results
+                    ],
+                )
+            index, result = max(pages, key=lambda pair: len(pair[1].model_dump_json()))
+            result.records.pop()
+            result.next_offset = int(q.requests[index].arguments.get("offset", 0)) + len(
+                result.records
+            )
+            result.status = "partial" if result.records else "unavailable"
+            reason = "Aggregate bundle byte budget reached; continue with next_offset"
+            if reason not in result.reasons:
+                result.reasons.append(reason)
         statuses = [r.status for r in results]
         return BundleResult(
             status="complete"
@@ -215,6 +280,33 @@ class Service:
         tool = self.tools.get(name)
         if tool is None:
             return Result(provider="unknown", kind="information", reasons=["unknown_tool"])
+        if name in {"resolve_location", "resolve_station_product", "collect_resolved_conditions"}:
+            if name == "collect_resolved_conditions" and "units" not in arguments:
+                arguments = {**arguments, "units": self.settings.default_units}
+            try:
+                q = tool.schema.model_validate(arguments)
+                # Collection has finite planning stages plus a parallel retrieval stage.
+                deadline = self.settings.tool_timeout * (
+                    5 if name == "collect_resolved_conditions" else 1
+                )
+                async with asyncio.timeout(deadline):
+                    result = await tool.handler(q)
+                if len(result.model_dump_json().encode()) > 120_000:
+                    raise ValueError("Resolution metadata exceeds output byte bound")
+                return result
+            except (ValidationError, ValueError, ProviderError, TimeoutError) as exc:
+                reason = (
+                    f"{getattr(exc, 'code', 'invalid_arguments_or_resolution')}: {str(exc)[:500]}"
+                )
+            except Exception as exc:
+                reason = f"resolution_error: unexpected {type(exc).__name__}; no fixture fallback"
+            if name == "resolve_location":
+                return ResolutionResult(state="unavailable", reasons=[reason])
+            if name == "resolve_station_product":
+                return StationSelection(
+                    product=str(arguments.get("product", "unknown"))[:100], reasons=[reason]
+                )
+            return ConditionsPackage(reasons=[reason])
         if name == "collect_conditions":
             try:
                 q = tool.schema.model_validate(arguments)

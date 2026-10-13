@@ -86,6 +86,12 @@ LM Studio's entry take precedence over the same keys in `.env`.
 
 ## Troubleshooting and limits
 
+For the higher-level workflow, see [resolution, collection and the short explanation
+prompt](resolution-collection.md#model-handoff). A functioning client MCP tool loop
+must execute resolution/collection and supply the validated package. A plain
+chat-completions request does not execute these tools. SDK transport/text checks are
+separate from verification of LM Studio itself or any particular model.
+
 If the server cannot start, confirm both configured paths exist and that the
 project was installed in its `.venv`. On a fresh checkout use the setup commands
 in [README](../README.md). On this machine you can verify the import with:

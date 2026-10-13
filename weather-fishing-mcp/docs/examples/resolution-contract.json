@@ -1,0 +1,657 @@
+{
+  "fixture_notice": "SYNTHETIC CONTRACT FIXTURES. Not retrieved conditions, geographic evidence, or production catalogues. Never substitute for failed live retrieval.",
+  "resolve_request": {
+    "place": "SYNTHETIC Springfield",
+    "country": "US",
+    "region": "VA",
+    "waterbody": "River B"
+  },
+  "ambiguous_response": {
+    "schema_version": "1.0",
+    "status": "unavailable",
+    "state": "clarification_required",
+    "context": null,
+    "candidates": [
+      {
+        "id": "fixture:town",
+        "locality": "SYNTHETIC Springfield",
+        "country": "US",
+        "region": "VA",
+        "point": {
+          "latitude": 38.9,
+          "longitude": -77.0
+        },
+        "precision": "locality centre",
+        "bounds": [
+          -77.1,
+          38.8,
+          -76.9,
+          39.0
+        ],
+        "timezone": "America/New_York",
+        "provenance": [
+          {
+            "provider": "fixture",
+            "source_url": "https://fixture.invalid/geography",
+            "retrieved_at": "2026-10-13T12:00:00Z",
+            "method": "SYNTHETIC reviewed waterbody relationship",
+            "reference": null
+          }
+        ]
+      },
+      {
+        "id": "fixture:other",
+        "locality": "SYNTHETIC Springfield",
+        "country": "US",
+        "region": "VA",
+        "point": {
+          "latitude": 38.9,
+          "longitude": -77.0
+        },
+        "precision": "locality centre",
+        "bounds": [
+          -77.1,
+          38.8,
+          -76.9,
+          39.0
+        ],
+        "timezone": "America/New_York",
+        "provenance": [
+          {
+            "provider": "fixture",
+            "source_url": "https://fixture.invalid/geography",
+            "retrieved_at": "2026-10-13T12:00:00Z",
+            "method": "SYNTHETIC reviewed waterbody relationship",
+            "reference": null
+          }
+        ]
+      }
+    ],
+    "reasons": [],
+    "missing_fields": []
+  },
+  "resolved_context": {
+    "locality": {
+      "id": "fixture:town",
+      "locality": "SYNTHETIC Springfield",
+      "country": "US",
+      "region": "VA",
+      "point": {
+        "latitude": 38.9,
+        "longitude": -77.0
+      },
+      "precision": "locality centre",
+      "bounds": [
+        -77.1,
+        38.8,
+        -76.9,
+        39.0
+      ],
+      "timezone": "America/New_York",
+      "provenance": [
+        {
+          "provider": "fixture",
+          "source_url": "https://fixture.invalid/geography",
+          "retrieved_at": "2026-10-13T12:00:00Z",
+          "method": "SYNTHETIC reviewed waterbody relationship",
+          "reference": null
+        }
+      ]
+    },
+    "point": {
+      "latitude": 38.9,
+      "longitude": -77.0
+    },
+    "point_identity": "locality_representative",
+    "coordinate_precision": "locality centre",
+    "timezone": "America/New_York",
+    "waterbody_hint": "River B",
+    "provenance": [
+      {
+        "provider": "fixture",
+        "source_url": "https://fixture.invalid/geography",
+        "retrieved_at": "2026-10-13T12:00:00Z",
+        "method": "SYNTHETIC reviewed waterbody relationship",
+        "reference": null
+      }
+    ],
+    "receipt": "SYNTHETIC-not-valid-in-production"
+  },
+  "station_request": {
+    "context": {
+      "locality": {
+        "id": "fixture:town",
+        "locality": "SYNTHETIC Springfield",
+        "country": "US",
+        "region": "VA",
+        "point": {
+          "latitude": 38.9,
+          "longitude": -77.0
+        },
+        "precision": "locality centre",
+        "bounds": [
+          -77.1,
+          38.8,
+          -76.9,
+          39.0
+        ],
+        "timezone": "America/New_York",
+        "provenance": [
+          {
+            "provider": "fixture",
+            "source_url": "https://fixture.invalid/geography",
+            "retrieved_at": "2026-10-13T12:00:00Z",
+            "method": "SYNTHETIC reviewed waterbody relationship",
+            "reference": null
+          }
+        ]
+      },
+      "point": {
+        "latitude": 38.9,
+        "longitude": -77.0
+      },
+      "point_identity": "locality_representative",
+      "coordinate_precision": "locality centre",
+      "timezone": "America/New_York",
+      "waterbody_hint": "River B",
+      "provenance": [
+        {
+          "provider": "fixture",
+          "source_url": "https://fixture.invalid/geography",
+          "retrieved_at": "2026-10-13T12:00:00Z",
+          "method": "SYNTHETIC reviewed waterbody relationship",
+          "reference": null
+        }
+      ],
+      "receipt": "SYNTHETIC-not-valid-in-production"
+    },
+    "start_date": "2025-04-01",
+    "end_date": "2025-04-02",
+    "product": "predictions",
+    "datum": "MLLW"
+  },
+  "station_relationships": [
+    {
+      "locality_id": "fixture:town",
+      "station_id": "B",
+      "waterbody": "River B",
+      "waterbody_aliases": [],
+      "default_for_locality": false,
+      "area_polygon": [],
+      "products": [
+        "predictions",
+        "water_level",
+        "hourly_height",
+        "currents",
+        "currents_predictions"
+      ],
+      "start_date": "2025-04-01",
+      "end_date": "2100-01-01",
+      "provenance": {
+        "provider": "fixture",
+        "source_url": "https://fixture.invalid/geography",
+        "retrieved_at": "2026-10-13T12:00:00Z",
+        "method": "SYNTHETIC reviewed waterbody relationship",
+        "reference": null
+      },
+      "limitation": "SYNTHETIC area representative"
+    }
+  ],
+  "solunar_localities": [
+    {
+      "locality_id": "fixture:town",
+      "country": "united_states",
+      "region": "california",
+      "city": "beverly_hills",
+      "source_timezone": null,
+      "provenance": {
+        "provider": "fixture",
+        "source_url": "https://fixture.invalid/geography",
+        "retrieved_at": "2026-10-13T12:00:00Z",
+        "method": "SYNTHETIC reviewed waterbody relationship",
+        "reference": null
+      }
+    }
+  ],
+  "collection_request": {
+    "context": {
+      "locality": {
+        "id": "fixture:town",
+        "locality": "SYNTHETIC Springfield",
+        "country": "US",
+        "region": "VA",
+        "point": {
+          "latitude": 38.9,
+          "longitude": -77.0
+        },
+        "precision": "locality centre",
+        "bounds": [
+          -77.1,
+          38.8,
+          -76.9,
+          39.0
+        ],
+        "timezone": "America/New_York",
+        "provenance": [
+          {
+            "provider": "fixture",
+            "source_url": "https://fixture.invalid/geography",
+            "retrieved_at": "2026-10-13T12:00:00Z",
+            "method": "SYNTHETIC reviewed waterbody relationship",
+            "reference": null
+          }
+        ]
+      },
+      "point": {
+        "latitude": 38.9,
+        "longitude": -77.0
+      },
+      "point_identity": "locality_representative",
+      "coordinate_precision": "locality centre",
+      "timezone": "America/New_York",
+      "waterbody_hint": "River B",
+      "provenance": [
+        {
+          "provider": "fixture",
+          "source_url": "https://fixture.invalid/geography",
+          "retrieved_at": "2026-10-13T12:00:00Z",
+          "method": "SYNTHETIC reviewed waterbody relationship",
+          "reference": null
+        }
+      ],
+      "receipt": "SYNTHETIC-not-valid-in-production"
+    },
+    "window": {
+      "local_date": "2025-04-01"
+    },
+    "permitted_providers": [
+      "coops"
+    ],
+    "units": "metric",
+    "limit_per_category": 3
+  },
+  "collection_response": {
+    "schema_version": "1.0",
+    "status": "partial",
+    "context": {
+      "locality": {
+        "id": "fixture:town",
+        "locality": "SYNTHETIC Springfield",
+        "country": "US",
+        "region": "VA",
+        "point": {
+          "latitude": 38.9,
+          "longitude": -77.0
+        },
+        "precision": "locality centre",
+        "bounds": [
+          -77.1,
+          38.8,
+          -76.9,
+          39.0
+        ],
+        "timezone": "America/New_York",
+        "provenance": [
+          {
+            "provider": "fixture",
+            "source_url": "https://fixture.invalid/geography",
+            "retrieved_at": "2026-10-13T12:00:00Z",
+            "method": "SYNTHETIC reviewed waterbody relationship",
+            "reference": null
+          }
+        ]
+      },
+      "point": {
+        "latitude": 38.9,
+        "longitude": -77.0
+      },
+      "point_identity": "locality_representative",
+      "coordinate_precision": "locality centre",
+      "timezone": "America/New_York",
+      "waterbody_hint": "River B",
+      "provenance": [
+        {
+          "provider": "fixture",
+          "source_url": "https://fixture.invalid/geography",
+          "retrieved_at": "2026-10-13T12:00:00Z",
+          "method": "SYNTHETIC reviewed waterbody relationship",
+          "reference": null
+        }
+      ],
+      "receipt": "SYNTHETIC-not-valid-in-production"
+    },
+    "window": {
+      "local_date": "2025-04-01",
+      "end_date": null,
+      "start_time": null,
+      "end_time": null,
+      "start_fold": null,
+      "end_fold": null
+    },
+    "utc_start": "2025-04-01T04:00:00+00:00",
+    "utc_end": "2025-04-02T04:00:00+00:00",
+    "units_preference": "metric",
+    "categories": {
+      "weather": {
+        "relevance_status": "unverified",
+        "retrieval_status": "unavailable",
+        "coverage_status": "no_records",
+        "coverage_gaps": [],
+        "limitations": [],
+        "selection": null,
+        "results": [],
+        "continuations": [],
+        "failures": [
+          "permitted_provider_missing: historical ncei"
+        ]
+      },
+      "marine": {
+        "relevance_status": "unverified",
+        "retrieval_status": "unavailable",
+        "coverage_status": "no_records",
+        "coverage_gaps": [],
+        "limitations": [],
+        "selection": null,
+        "results": [],
+        "continuations": [],
+        "failures": [
+          "permitted_provider_missing: historical ndbc"
+        ]
+      },
+      "tides": {
+        "relevance_status": "qualified",
+        "retrieval_status": "complete",
+        "coverage_status": "unverified",
+        "coverage_gaps": [],
+        "limitations": [
+          "SYNTHETIC area representative",
+          "Representative station; retrieval does not prove complete local coverage",
+          "Individual intervals/events do not establish full-window coverage"
+        ],
+        "selection": {
+          "status": "complete",
+          "relevance_status": "qualified",
+          "product": "predictions",
+          "station": {
+            "id": "B",
+            "name": "SYNTHETIC B",
+            "latitude": 38.95,
+            "longitude": -77,
+            "state": null,
+            "tidal": null,
+            "source_standard_timezone": null,
+            "observes_dst": null,
+            "type": "R",
+            "reference_id": null,
+            "details": null,
+            "representative": true,
+            "relevance": "Geographic distance only; no same-waterbody or terrain guarantee",
+            "distance_km": 5.56,
+            "relevance_status": "qualified",
+            "waterbodies": [
+              "River B"
+            ]
+          },
+          "candidates": [
+            {
+              "id": "A",
+              "name": "SYNTHETIC A",
+              "latitude": 38.901,
+              "longitude": -77,
+              "state": null,
+              "tidal": null,
+              "source_standard_timezone": null,
+              "observes_dst": null,
+              "type": "R",
+              "reference_id": null,
+              "details": null,
+              "representative": true,
+              "relevance": "Geographic distance only; no same-waterbody or terrain guarantee",
+              "distance_km": 0.111,
+              "relevance_status": "unverified",
+              "waterbodies": [
+                "River A"
+              ]
+            },
+            {
+              "id": "B",
+              "name": "SYNTHETIC B",
+              "latitude": 38.95,
+              "longitude": -77,
+              "state": null,
+              "tidal": null,
+              "source_standard_timezone": null,
+              "observes_dst": null,
+              "type": "R",
+              "reference_id": null,
+              "details": null,
+              "representative": true,
+              "relevance": "Geographic distance only; no same-waterbody or terrain guarantee",
+              "distance_km": 5.56,
+              "relevance_status": "qualified",
+              "waterbodies": [
+                "River B"
+              ]
+            }
+          ],
+          "provenance": [
+            {
+              "provider": "coops",
+              "source_url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json",
+              "retrieved_at": "2026-10-13T12:00:00+00:00",
+              "method": "Product catalogue: tidepredictions",
+              "reference": null
+            },
+            {
+              "provider": "fixture",
+              "source_url": "https://fixture.invalid/geography",
+              "retrieved_at": "2026-10-13T12:00:00Z",
+              "method": "SYNTHETIC reviewed waterbody relationship",
+              "reference": null
+            },
+            {
+              "provider": "coops",
+              "source_url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/B.json",
+              "retrieved_at": "2026-10-13T12:00:00+00:00",
+              "method": "Station identity and reference/subordinate metadata",
+              "reference": null
+            },
+            {
+              "provider": "coops",
+              "source_url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/B/datums.json",
+              "retrieved_at": "2026-10-13T12:00:00+00:00",
+              "method": "Datum validation",
+              "reference": null
+            }
+          ],
+          "limitations": [
+            "SYNTHETIC area representative",
+            "Representative station; retrieval does not prove complete local coverage"
+          ],
+          "reasons": [],
+          "next_offset": null
+        },
+        "results": [
+          {
+            "status": "complete",
+            "provider": "coops",
+            "kind": "prediction",
+            "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter",
+            "source_urls": [
+              "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/B.json",
+              "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/B/datums.json"
+            ],
+            "retrieved_at": "2026-10-13T12:00:00+00:00",
+            "served_at": "2026-10-13T16:25:59.543844+00:00",
+            "publication_time": null,
+            "valid_from": "2025-04-01T04:00:00+00:00",
+            "valid_to": "2025-04-02T04:00:00+00:00",
+            "location": {
+              "latitude": 38.9,
+              "longitude": -77.0,
+              "station_id": "B"
+            },
+            "station": {
+              "id": "B",
+              "name": "SYNTHETIC B",
+              "latitude": 38.95,
+              "longitude": -77,
+              "state": null,
+              "tidal": null,
+              "source_standard_timezone": null,
+              "observes_dst": null,
+              "type": "R",
+              "reference_id": null,
+              "details": null,
+              "representative": true,
+              "relevance": "Geographic distance only; no same-waterbody or terrain guarantee",
+              "distance_km": 5.56
+            },
+            "timezone": "America/New_York",
+            "source_timezone": "gmt",
+            "units": {
+              "height": "m"
+            },
+            "datum": "MLLW",
+            "reasons": [],
+            "missing_fields": [],
+            "qualifications": [
+              "Retrieved using source time_zone=gmt; output converted to requested IANA timezone",
+              "Past-dated predictions are calculations retrieved now, not archived forecasts",
+              "Station relevance is geographic only; tide heights retain the selected datum"
+            ],
+            "records": [
+              {
+                "time": "2025-04-01T08:00:00-04:00",
+                "end_time": null,
+                "source_time": "2025-04-01 12:00",
+                "source_end_time": null,
+                "source_values": {
+                  "t": "2025-04-01 12:00",
+                  "v": "1.20",
+                  "type": "H"
+                },
+                "source_units": {
+                  "height": "m"
+                },
+                "source_url": null,
+                "source_retrieved_at": null,
+                "evidence_refs": [
+                  "ev_ba285ef408d03ea5"
+                ],
+                "values": {
+                  "height": 1.2,
+                  "type": "H"
+                },
+                "qualifications": []
+              }
+            ],
+            "next_offset": null,
+            "cache_hit": false,
+            "attribution": "Source: NOAA CO-OPS Tides & Currents; normalized by CommonTools"
+          }
+        ],
+        "continuations": [],
+        "failures": []
+      },
+      "sun_moon": {
+        "relevance_status": "unverified",
+        "retrieval_status": "unavailable",
+        "coverage_status": "no_records",
+        "coverage_gaps": [],
+        "limitations": [],
+        "selection": null,
+        "results": [],
+        "continuations": [],
+        "failures": [
+          "permitted_provider_missing: sole solunar/astronomy adapter is solunar"
+        ]
+      },
+      "solunar": {
+        "relevance_status": "unverified",
+        "retrieval_status": "unavailable",
+        "coverage_status": "no_records",
+        "coverage_gaps": [],
+        "limitations": [],
+        "selection": null,
+        "results": [],
+        "continuations": [],
+        "failures": [
+          "permitted_provider_missing: sole solunar/astronomy adapter is solunar"
+        ]
+      }
+    },
+    "evidence": [
+      {
+        "ref": "ev_ba285ef408d03ea5",
+        "provider": "coops",
+        "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter",
+        "retrieved_at": "2026-10-13T12:00:00+00:00",
+        "role": "data",
+        "tool": "get_tides_currents",
+        "arguments": {
+          "location": {
+            "latitude": 38.9,
+            "longitude": -77.0,
+            "station_id": "B"
+          },
+          "timezone": "America/New_York",
+          "units": "metric",
+          "start_date": "2025-04-01",
+          "end_date": "2025-04-01",
+          "limit": 3,
+          "product": "predictions",
+          "datum": "MLLW",
+          "offset": 0
+        }
+      },
+      {
+        "ref": "ev_5c4cebe825ca93d4",
+        "provider": "coops",
+        "source_url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/B.json",
+        "retrieved_at": null,
+        "role": "metadata",
+        "tool": "get_tides_currents",
+        "arguments": {
+          "location": {
+            "latitude": 38.9,
+            "longitude": -77.0,
+            "station_id": "B"
+          },
+          "timezone": "America/New_York",
+          "units": "metric",
+          "start_date": "2025-04-01",
+          "end_date": "2025-04-01",
+          "limit": 3,
+          "product": "predictions",
+          "datum": "MLLW",
+          "offset": 0
+        }
+      },
+      {
+        "ref": "ev_42049a1edc72582e",
+        "provider": "coops",
+        "source_url": "https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations/B/datums.json",
+        "retrieved_at": null,
+        "role": "metadata",
+        "tool": "get_tides_currents",
+        "arguments": {
+          "location": {
+            "latitude": 38.9,
+            "longitude": -77.0,
+            "station_id": "B"
+          },
+          "timezone": "America/New_York",
+          "units": "metric",
+          "start_date": "2025-04-01",
+          "end_date": "2025-04-01",
+          "limit": 3,
+          "product": "predictions",
+          "datum": "MLLW",
+          "offset": 0
+        }
+      }
+    ],
+    "reasons": []
+  }
+}

@@ -64,13 +64,19 @@ def finish(result: Result, q: Query, records: list[Record], *, empty_ok=False) -
                 or max(timed, key=lambda r: instant(r.time)).time
             )
     missing = set(result.missing_fields)
+
+    def missing_value(value):
+        return value is None or (
+            isinstance(value, dict) and "value" in value and value["value"] is None
+        )
+
     if q.fields:
         for record in records:
-            missing.update(f for f in q.fields if record.values.get(f) is None)
+            missing.update(f for f in q.fields if missing_value(record.values.get(f)))
             record.values = {f: record.values.get(f) for f in q.fields}
     else:
         for record in records:
-            missing.update(k for k, v in record.values.items() if v is None)
+            missing.update(k for k, v in record.values.items() if missing_value(v))
     result.missing_fields = sorted(missing)
     if q.offset + q.limit < len(records):
         result.next_offset = q.offset + q.limit

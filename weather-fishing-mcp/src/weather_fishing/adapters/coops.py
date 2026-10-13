@@ -23,6 +23,9 @@ def station_info(p):
         "tidal": p.get("tidal"),
         "source_standard_timezone": p.get("timezone"),
         "observes_dst": p.get("observedst"),
+        "type": p.get("type"),
+        "reference_id": p.get("reference_id"),
+        "details": p.get("details"),
     }
 
 
@@ -100,7 +103,7 @@ class COOPS(Adapter):
             metadata_urls.append(bins.url)
             bin_body = bins.json()
             available = bin_body.get("bins", bin_body.get("binList", []))
-            if available and q.bin not in [
+            if q.bin not in [
                 int(b.get("num", b.get("bin", b.get("binNumber", -1)))) for b in available
             ]:
                 raise ProviderError(
@@ -131,7 +134,7 @@ class COOPS(Adapter):
             )
             metadata_urls.append(datums.url)
             names = [d.get("name") for d in datums.json().get("datums", [])]
-            if names and q.datum not in names:
+            if q.datum not in names:
                 raise ProviderError("unsupported_datum", "Requested datum not listed for station")
         if q.product == "predictions":
             params["interval"] = q.interval or "hilo"
@@ -244,6 +247,8 @@ class COOPS(Adapter):
                 Record(
                     time=display(source, q.timezone),
                     source_time=source,
+                    source_values=dict(row),
+                    source_units=dict(result.units),
                     values=normalized,
                     qualifications=qualifications,
                 )

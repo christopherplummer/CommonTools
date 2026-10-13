@@ -17,6 +17,14 @@ class Settings(BaseSettings):
     api_key: SecretStr = SecretStr("")
     ncei_token: SecretStr = SecretStr("")
     solunar_permission_reference: str = ""
+    station_relationships_file: Path | None = Field(
+        default=None,
+        description="Operator-reviewed station/area relationships; no bundled defaults",
+    )
+    solunar_localities_file: Path | None = Field(
+        default=None,
+        description="Reviewed canonical-locality to exact SolunarForecast slug mapping",
+    )
     quota_database: Path = Path("data/quota.sqlite3")
     request_timeout: float = Field(default=15, ge=1, le=30)
     tool_timeout: float = Field(default=50, ge=5, le=60)

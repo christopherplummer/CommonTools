@@ -1,5 +1,10 @@
 # MCP tool reference
 
+The original 11 contracts below remain supported. The three higher-level tools
+`resolve_location`, `resolve_station_product` and `collect_resolved_conditions` are
+documented in [resolution and collection](resolution-collection.md), including the
+versioned package, configuration dependencies and synthetic executable examples.
+
 All tool schemas are discoverable through MCP `tools/list`. Inputs reject unknown
 fields. Results use `structuredContent`; text content is a short status by default.
 `WF_TEXT_RESULTS=true` includes the same bounded JSON in text for clients such as
@@ -205,7 +210,9 @@ Each data result has `status`, `provider`, `kind`, `source_url`, `source_urls`,
 `station`, `timezone`, `source_timezone`, `units`, `datum`, `attribution`,
 `qualifications`, `reasons`, `missing_fields`, `records`, `next_offset`, `cache_hit`.
 Records have optional offset `time`,`end_time`, original `source_time`, `values`
-and per-record qualifications. Unknown publication/validity times remain null.
+and per-record qualifications. Records also retain source_end_time, source_values,
+source_units, source_url, source_retrieved_at and evidence_refs where applicable.
+Unknown publication/validity times remain null.
 Available station/zone metadata URLs are retained alongside the data URL.
 
 Kinds distinguish `observation`, `forecast`, `archived_forecast`, `prediction`,

@@ -2,6 +2,7 @@ import asyncio
 import json
 import socket
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import httpx
@@ -193,7 +194,7 @@ async def test_official_sdk_stdio_discovery_and_structured_output():
         async with ClientSession(read, write) as session:
             await session.initialize()
             tools = (await session.list_tools()).tools
-            assert len(tools) == 11
+            assert len(tools) == 14
             assert all(
                 t.inputSchema and t.outputSchema and t.annotations.readOnlyHint for t in tools
             )
@@ -235,6 +236,11 @@ async def test_desktop_launcher_text_results_and_override(override):
                     failed = json.loads(unavailable.content[0].text)
                     assert failed == unavailable.structuredContent
                     assert failed["status"] == "unavailable" and failed["reasons"]
+                    unresolved = await session.call_tool(
+                        "resolve_location", {"place": "Springfield"}
+                    )
+                    assert json.loads(unresolved.content[0].text) == unresolved.structuredContent
+                    assert unresolved.structuredContent["state"] == "dependency_required"
 
 
 async def test_http_authentication_and_sdk_roundtrip(service, point):
@@ -298,6 +304,52 @@ async def test_http_authentication_and_sdk_roundtrip(service, point):
                     "windSpeed": "10 km/h",
                 }
                 assert payload["next_offset"] == 3
+                # Actual MCP client/server package path, with explicitly SYNTHETIC source fixtures.
+                service.http.responses["/points/38.9000,-77.0000"][1]["properties"][
+                    "relativeLocation"
+                ] = {
+                    "geometry": {"coordinates": [-77.02, 38.88]},
+                    "properties": {"city": "SYNTHETIC city", "state": "VA"},
+                }
+                resolved = await session.call_tool("resolve_location", {"coordinates": point})
+                assert json.loads(resolved.content[0].text) == resolved.structuredContent
+                future = (datetime.now(UTC) + timedelta(days=1)).date().isoformat()
+                service.http.add(
+                    "/forecast/hourly",
+                    {
+                        "properties": {
+                            "periods": [
+                                {
+                                    "startTime": future + "T06:00:00Z",
+                                    "endTime": future + "T07:00:00Z",
+                                    "temperature": 20,
+                                    "windSpeed": "10 km/h",
+                                    "probabilityOfPrecipitation": {"value": 0},
+                                }
+                            ]
+                        }
+                    },
+                )
+                package = await session.call_tool(
+                    "collect_resolved_conditions",
+                    {
+                        "context": resolved.structuredContent["context"],
+                        "window": {"local_date": future},
+                        "permitted_providers": ["nws"],
+                    },
+                )
+                data = json.loads(package.content[0].text)
+                assert data == package.structuredContent and data["schema_version"] == "1.0"
+                assert set(data["categories"]) == {
+                    "weather",
+                    "marine",
+                    "tides",
+                    "sun_moon",
+                    "solunar",
+                }
+                records = data["categories"]["weather"]["results"][0]["records"]
+                assert records[0]["values"]["temperature"] == 20 and records[0]["evidence_refs"]
+                assert len(package.content) == 1
     finally:
         server.should_exit = True
         await asyncio.wait_for(task, 10)

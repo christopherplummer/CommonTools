@@ -1,0 +1,152 @@
+{
+  "checked_at": "2026-10-13T16:27:01.559460+00:00",
+  "fixture_data_used": false,
+  "scope": "Actual SDK stdio/text result and public NOAA calls; not LM Studio UI",
+  "tools_discovered": 14,
+  "resolution": {
+    "status": "complete",
+    "state": "resolved",
+    "context": {
+      "locality": {
+        "id": "nws:Boston:MA:-71.018253:42.3385513",
+        "locality": "Boston",
+        "country": "US",
+        "region": "MA",
+        "point": {
+          "latitude": 42.3385513,
+          "longitude": -71.018253
+        },
+        "precision": "provider relative-locality representative point; accuracy unspecified",
+        "bounds": null,
+        "timezone": "America/New_York",
+        "provenance": [
+          {
+            "provider": "nws",
+            "source_url": "https://api.weather.gov/points/42.3500,-71.0500",
+            "retrieved_at": "2026-10-13T16:27:03.038113+00:00",
+            "method": "NWS point timezone; relativeLocation locality",
+            "reference": null
+          }
+        ]
+      },
+      "point": {
+        "latitude": 42.35,
+        "longitude": -71.05
+      },
+      "point_identity": "submitted_fishing_point",
+      "coordinate_precision": "submitted precision; positional accuracy unverified",
+      "timezone": "America/New_York",
+      "waterbody_hint": null,
+      "provenance": [
+        {
+          "provider": "caller",
+          "source_url": "urn:submitted-coordinates",
+          "retrieved_at": null,
+          "method": "Preserved supplied coordinates without snapping",
+          "reference": null
+        },
+        {
+          "provider": "nws",
+          "source_url": "https://api.weather.gov/points/42.3500,-71.0500",
+          "retrieved_at": "2026-10-13T16:27:03.038113+00:00",
+          "method": "NWS point timezone; relativeLocation locality",
+          "reference": null
+        }
+      ]
+    },
+    "reasons": [],
+    "text_equals_structured": true
+  },
+  "collection": {
+    "status": "partial",
+    "window": {
+      "local_date": "2026-10-14"
+    },
+    "text_equals_structured": true,
+    "json_bytes": 18504,
+    "categories": {
+      "weather": {
+        "retrieval_status": "partial",
+        "relevance_status": "qualified",
+        "coverage_status": "gaps",
+        "failures": [],
+        "coverage_gaps": [
+          "Response page truncated; continue with next_offset"
+        ],
+        "records": 3,
+        "candidate_count": 0,
+        "sources": [
+          "https://api.weather.gov/gridpoints/BOX/72,101/forecast/hourly?units=si"
+        ],
+        "all_records_have_evidence": true
+      },
+      "marine": {
+        "retrieval_status": "partial",
+        "relevance_status": "qualified",
+        "coverage_status": "gaps",
+        "failures": [],
+        "coverage_gaps": [
+          "Marine grid variables retain source WMO units",
+          "Response page truncated; continue with next_offset"
+        ],
+        "records": 3,
+        "candidate_count": 0,
+        "sources": [
+          "https://api.weather.gov/gridpoints/BOX/72,101"
+        ],
+        "all_records_have_evidence": true
+      },
+      "tides": {
+        "retrieval_status": "unavailable",
+        "relevance_status": "clarification_required",
+        "coverage_status": "no_records",
+        "failures": [
+          "waterbody_or_relationship_required: distance alone cannot qualify tides"
+        ],
+        "coverage_gaps": [],
+        "records": 0,
+        "candidate_count": 20,
+        "sources": [],
+        "all_records_have_evidence": true
+      },
+      "sun_moon": {
+        "retrieval_status": "unavailable",
+        "relevance_status": "unverified",
+        "coverage_status": "no_records",
+        "failures": [
+          "license_review_required: existing SolunarForecast gate"
+        ],
+        "coverage_gaps": [],
+        "records": 0,
+        "candidate_count": 0,
+        "sources": [],
+        "all_records_have_evidence": true
+      },
+      "solunar": {
+        "retrieval_status": "unavailable",
+        "relevance_status": "unverified",
+        "coverage_status": "no_records",
+        "failures": [
+          "license_review_required: existing SolunarForecast gate"
+        ],
+        "coverage_gaps": [],
+        "records": 0,
+        "candidate_count": 0,
+        "sources": [],
+        "all_records_have_evidence": true
+      }
+    }
+  },
+  "explicit_station_compatibility": {
+    "status": "partial",
+    "source_url": "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=8443970&product=predictions&time_zone=gmt&units=metric&format=json&application=CommonTools_WeatherFishing&datum=MLLW&interval=hilo&begin_date=20250401+04%3A00&end_date=20250402+03%3A59",
+    "reasons": [
+      "Response page truncated; continue with next_offset"
+    ],
+    "record_count": 3,
+    "datum": "MLLW",
+    "has_raw_values": true,
+    "text_equals_structured": true,
+    "qualification": "Caller-selected station; local suitability unverified"
+  }
+}

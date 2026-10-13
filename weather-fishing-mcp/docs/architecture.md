@@ -1,7 +1,7 @@
 # Architecture
 
 `models.py` defines strict Pydantic inputs, shared result provenance, records and
-bundle output. `service.py` registers the 11 tools, validates arguments, gates
+bundle output. `service.py` registers the 14 tools, validates arguments, gates
 provider/product combinations, isolates failures and bounds execution/output.
 `server.py` publishes the same registry over the official MCP SDK's stdio and
 Streamable HTTP transports; HTTP adds bearer authentication and host protection.
@@ -13,7 +13,14 @@ entirely; a provider endpoint change is reported for review rather than followin
 an arbitrary new origin. `catalog.py` exposes the integration plan and unresolved
 terms as machine-readable capability records.
 
-There is no arbitrary URL fetch, geocoder, model client, browser session, fixture
+`resolution_models.py`, `resolution.py` and `collection.py` add the typed geographic
+provider port, existing NWS coordinate resolution, reviewed station qualification,
+context integrity receipts and deterministic bounded conditions packages. See
+[the resolution architecture and contracts](resolution-collection.md). CommonTools
+owns retrieval; Fishing AI handles requests, clarification, validation and persistence.
+Global geocoding/timezone provider selection remains an explicit dependency.
+
+There is no arbitrary URL fetch, global geocoder, model client, browser session, fixture
 loader, file execution tool, persistent forecast archive or regulatory engine.
 External text is data. Profile text and dates are normalized, with provenance and
 qualifications. NOAA/NDBC source quality flags and absent values remain visible.
@@ -46,7 +53,9 @@ NWS points and marine zones are verified with provider lookups. Stations are loo
 up in provider metadata. Coordinates, when supplied, produce an actual distance
 to the selected station; distances above 100 km qualify retrieval as partial.
 Catalogue discovery labels candidates as representative, since proximity does not
-prove same estuary, terrain, basin or current regime. No station is selected silently.
+prove same estuary, terrain, basin or current regime. The new collector automatically
+selects only qualified tide/current candidates using reviewed area/waterbody evidence
+and provider product metadata. Low-level tools retain explicit station IDs.
 NDBC historic values retain the warning that active catalogue coordinates cannot
 verify older deployments. City coordinates are not inferred from model knowledge.
 

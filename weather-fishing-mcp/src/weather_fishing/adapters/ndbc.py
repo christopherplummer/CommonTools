@@ -99,7 +99,18 @@ def parse_stdmet(text: str, requested: str, units: str) -> tuple[list[Record], d
                     value = value * 0.3048 if value is not None else None
                     actual_units[f] = "m"
             values[f] = round(value, 4) if value is not None else None
-        rows.append(Record(time=display(stamp, requested), source_time=stamp, values=values))
+        rows.append(
+            Record(
+                time=display(stamp, requested),
+                source_time=" ".join(parts[:prefix]),
+                values=values,
+                source_values=dict(zip(fields, parts[prefix:], strict=True)),
+                source_units={f: UNITS.get(f, "source unspecified") for f in fields},
+                qualifications=[
+                    "Source UTC year/month/day/hour/minute tokens normalized to offset ISO"
+                ],
+            )
+        )
     return rows, actual_units
 
 
@@ -235,6 +246,9 @@ class NDBC(Adapter):
                             "response_too_large", "Decompressed archive exceeds limit"
                         )
                 parsed, units = parse_stdmet(body.decode("ascii"), q.timezone, q.units)
+                for row in parsed:
+                    row.source_url = fetched.url
+                    row.source_retrieved_at = fetched.retrieved_at
                 rows.extend(parsed)
                 result.units.update(units)
                 fetched_sources.append(fetched)

@@ -199,6 +199,12 @@ class Record(BaseModel):
     time: str | None = Field(default=None, description="Offset ISO instant if source defines one")
     end_time: str | None = None
     source_time: str | None = None
+    source_end_time: str | None = None
+    source_values: dict[str, Any] = Field(default_factory=dict)
+    source_units: dict[str, str] = Field(default_factory=dict)
+    source_url: str | None = None
+    source_retrieved_at: str | None = None
+    evidence_refs: list[str] = Field(default_factory=list)
     values: dict[str, Any] = Field(
         default_factory=dict,
         description="Provider-specific fields; see tool reference for keys and units",

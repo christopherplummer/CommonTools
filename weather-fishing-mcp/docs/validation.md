@@ -1,5 +1,58 @@
 # Validation record
 
+## Resolution and collection layer — October 13, 2026
+
+The new layer and its remaining geographic/station-policy dependencies are documented
+in [the implementation/contract guide](resolution-collection.md). Existing validation
+below is retained as historical evidence; it does not independently verify this layer.
+
+| Final check for this change | Actually observed |
+| --- | --- |
+| Full pytest suite | **108 passed**, 16.70 seconds |
+| Ruff lint / format | Passed; 30 Python files formatted |
+| `pip check` | No broken requirements |
+| Source archive and wheel | Built successfully with pinned Hatchling |
+| Local SDK stdio / authenticated HTTP | 14 discovered schemas; configured unit defaults; higher-level JSON text equals structuredContent; successful synthetic weather package records have evidence refs |
+| Synthetic contract JSON | Validated against the actual input/output Pydantic models |
+
+All deterministic provider/geographic samples, relationship polygons, outages and
+contract outputs are explicitly **synthetic**. New coverage includes locality
+ambiguity, submitted/locality/station point identity, context tampering/restart,
+different nearby waterbodies, reviewed area defaults and polygon exclusion,
+unsupported products/date bounds/datums/current bins, subordinate reference checks,
+DST 23/25-hour days, ambiguous/nonexistent endpoints, cross-midnight/month windows,
+partial monthly failures, null measurements, NCEI upstream paging, source evidence,
+aggregate record continuation indices and both collector/bundle byte bounds.
+These tests verify code behavior, not global geographic data, real watershed relevance,
+credentialed NCEI availability or Solunar commercial access. MCP checks use actual
+local SDK clients/servers with synthetic upstream data; no LM Studio UI/model was run.
+
+The final live pass started at **12:27 p.m. Eastern** (16:27 UTC) on October 13, 2026.
+See [actual machine-readable metadata](resolution-live-verification.json);
+fixture_data_used is false. `scripts/live_resolution_check.py` uses the desktop
+stdio launcher and SDK, with actual public NOAA retrieval:
+
+| Request | Actually observed | Limits |
+| --- | --- | --- |
+| Resolve submitted 42.35,-71.05 | NWS returned Boston/MA, America/New_York and distinct relative-locality point 42.3385513,-71.018253 | NWS relative locality, not exact address/bounds; global forward search unconfigured |
+| Collect October 14 local date | Weather: 3 hourly records; marine: 3 independent grid intervals; all records had evidence refs | Partial pages, marine source units, no assertion of full window coverage |
+| Tide selection during collection | 20 actual candidates; clarification required; no station selected/retrieved | No reviewed waterbody/area relationship was supplied; distance was not used as proof |
+| sun_moon / solunar | Both unavailable under the existing license_review_required gate | No gated provider call, fixture fallback or global history claim |
+| Existing explicit Boston tide tool | 3 actual April 1, 2025 predictions, MLLW, source raw strings retained | Partial page; caller-selected station does not prove automatic local suitability |
+| Model-visible SDK result channel | Text JSON matched structuredContent for resolution, collection and explicit tide request; collection JSON was 18,504 UTF-8 bytes | Verifies SDK/model-visible channel, not LM Studio itself or model explanation quality |
+
+No live qualified automatic station selection was claimed: reviewed relationship
+catalogues are not shipped. No live global forward geocoder/timezone integration,
+new credentialed NCEI run, licensed Solunar collection or subordinate-current reference
+workflow was performed for this change. Those cases are contract/fixture verified
+where implemented, with the configuration/access dependencies reported explicitly.
+Geoapify is a documented concrete recommendation, not an installed/enabled provider.
+
+The default filesystem sandbox blocked pytest temporary-file operations and some
+Python subprocess runs. Successful test/build/live runs used reviewed filesystem
+and network access. Failed attempts were not counted as successful verification.
+No changes to Fishing AI, public deployment, push or live fixture substitution occurred.
+
 Completed October 13, 2026 on Windows with Python 3.12.10. Tests, actual public
 requests and unresolved access requirements are recorded separately. No fixture
 replaced a missing credential, failed live request or unsupported provider product.

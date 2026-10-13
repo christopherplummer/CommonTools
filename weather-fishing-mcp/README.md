@@ -6,6 +6,13 @@ the official MCP SDK and performs no model inference. Provider adapters are
 independent; `collect_conditions` retains successful results when another request
 fails. Production code never imports test fixtures or substitutes model memory.
 
+The higher-level `resolve_location`, `resolve_station_product`, and
+`collect_resolved_conditions` tools resolve context and assemble a versioned factual
+package before model explanation. Read [resolution contracts, examples and remaining
+dependencies](docs/resolution-collection.md). Global geocoding/timezone integration
+remains unconfigured; the stock resolver reuses NWS for covered coordinates.
+Automatic tide selection requires reviewed area/waterbody relationships.
+
 **Implemented:** NWS, NOAA CO-OPS, NOAA NCEI CDO v2, NOAA NDBC,
 NOAA Fisheries official species pages, and SolunarForecast monthly tables.
 NCEI requires your token. Solunar retrieval is gated pending your actual rights
@@ -139,7 +146,7 @@ design. No public deployment, cloud account or credentials are created here.
 }
 ```
 
-These are calls, not fixture data. The full examples cover all 11 tools in
+These are calls, not fixture data. The examples cover the 14 tools in
 [the tool reference](docs/tools.md).
 
 ## Context and output bounds
@@ -155,7 +162,9 @@ not an HTTP endpoint returning bare JSON.
 Each data tool defaults to 100 records (maximum 500), supports `fields`, and limits
 its serialized result to roughly 60 KB plus a small truncation explanation. Paging
 drops whole records and returns `next_offset`; a single oversized record returns
-unavailable and asks for fewer fields. A bundle accepts at most eight data requests.
+unavailable and asks for fewer fields. A bundle accepts at most eight data requests
+and has a 120 KB aggregate JSON cap. The resolved collector defaults to a 60 KB
+aggregate cap, with explicit per-category continuations and independent status reporting.
 Forecast/grid variables and scientific quantities are not invented or interpolated
 to make a compact answer.
 

@@ -161,7 +161,16 @@ def parse_month(body: bytes, q):
             if isinstance(v, dict) and v.get("event") == "ambiguous_or_nonexistent_local_time":
                 qualifications.append("Source local event cannot uniquely map across DST")
         rows.append(
-            Record(source_time=day.isoformat(), values=values, qualifications=qualifications)
+            Record(
+                source_time=match[1],
+                values=values,
+                qualifications=qualifications,
+                source_values={
+                    "source_date": match[1],
+                    **{k: text(k) for k in sections},
+                    "moon_phase_alt": images,
+                },
+            )
         )
     expected_days = {
         date(q.year, q.month, d) for d in range(1, calendar.monthrange(q.year, q.month)[1] + 1)
@@ -251,7 +260,7 @@ class Solunar(Adapter):
                 rows = [
                     r
                     for r in rows
-                    if q.start_date <= date.fromisoformat(r.source_time) <= q.end_date
+                    if q.start_date <= date.fromisoformat(r.values["date"]) <= q.end_date
                 ]
             if astronomy:
                 for row in rows:

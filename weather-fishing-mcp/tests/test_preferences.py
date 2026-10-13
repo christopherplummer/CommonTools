@@ -162,7 +162,7 @@ async def test_mcp_discovery_reports_configured_units_default(units):
                 await session.initialize()
                 tools = (await session.list_tools()).tools
                 schemas = [t.inputSchema for t in tools if "units" in t.inputSchema["properties"]]
-                assert len(schemas) == 9
+                assert len(schemas) == 10
                 assert all(s["properties"]["units"]["default"] == units for s in schemas)
                 assert all(
                     s["properties"]["units"]["enum"] == ["metric", "imperial", "source"]
