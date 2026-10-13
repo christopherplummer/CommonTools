@@ -27,6 +27,13 @@ class InspectInput(Input):
     file_id: str = Field(pattern=r"^[a-f0-9]{32}$")
 
 
+class PDFReadInput(InspectInput):
+    page_start: int = Field(1, ge=1)
+    page_end: int | None = Field(None, ge=1)
+    max_chars: int = Field(12000, ge=100, le=100000)
+    text_offset: int = Field(0, ge=0)
+
+
 class ListInput(Input):
     limit: int = Field(20, ge=1, le=100)
     offset: int = Field(0, ge=0)

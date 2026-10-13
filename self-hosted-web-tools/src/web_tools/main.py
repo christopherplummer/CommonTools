@@ -23,6 +23,7 @@ from web_tools.security.network_policy import NetworkPolicy
 from web_tools.services.browser_service import BrowserService
 from web_tools.services.download_service import DownloadService
 from web_tools.services.fetch_service import FetchService
+from web_tools.services.pdf_service import PDFService
 from web_tools.services.search_service import SearchService
 from web_tools.storage.file_store import FileStore
 from web_tools.storage.metadata_store import MetadataStore
@@ -48,6 +49,7 @@ def create_app(settings: Settings | None = None, *, search_transport=None, web_t
     sessions = SessionManager(settings, adapter)
     browser = BrowserService(settings, sessions, policy, interactions, files)
     registry.add_downloads(downloads)
+    registry.add_pdf(PDFService(settings, files))
     if settings.browser_enabled:
         registry.add_browser(browser)
     _, manager = create_mcp(registry, settings)

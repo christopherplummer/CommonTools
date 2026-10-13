@@ -55,6 +55,18 @@ chunked requests. Session counts, idle expiry, container memory/pid/tmp limits
 provide additional bounds. There is no comprehensive per-client rate limiter yet.
 
 Artifact retrieval forces an attachment and adds `nosniff` and sandbox headers.
+PDF reading accepts only managed artifact IDs and checks the actual PDF header.
+The parser receives no caller-selected paths, URLs, passwords or executable code.
+Encrypted PDFs are rejected; embedded scripts/attachments are not executed.
+PDF input defaults to 20 MiB, reads to at most 20 pages per call, and extracted text
+shares the global response/character budgets. pypdf stream decoding is capped at
+10 MB per stream with bounded page-tree traversal. Each parse runs in one subprocess
+under the tool's wall-clock deadline, killed and reaped on cancellation. At most
+one parser runs at a time. Linux workers additionally cap address space at 512 MiB
+and CPU time at 60 seconds; native Windows has no per-process memory ceiling and
+relies on input/decoder limits and the killable timeout. These restrictions reduce
+resource exhaustion risk; the parser is not a separate OS security sandbox.
+
 The application never executes downloaded content. Browser sessions are ephemeral;
 only completed artifacts and SQLite metadata persist. Back up that volume together.
 

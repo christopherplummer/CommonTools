@@ -11,6 +11,41 @@ def compact_data(data: dict, budget: int, arguments: dict) -> dict:
     def size():
         return len(json.dumps(data, separators=(",", ":")))
 
+    # PDF page text needs its own continuation cursor when the aggregate budget
+    # (including JSON escaping) is tighter than the extraction character limit.
+    if "total_pages" in data and "pages" in data:
+        while size() > budget:
+            pages = data["pages"]
+            if not pages:
+                raise ToolError("response_too_large", "PDF metadata exceeds the response budget")
+            last = pages[-1]
+            text = last["text"]
+            data["_truncated"] = True
+            data["next_page"] = last["page_number"]
+            data["next_text_offset"] = last["text_offset"]
+            last["truncated"] = True
+            # Binary search the prefix that fits; never cut a citation URL or ID.
+            low, high = 0, len(text)
+            while low < high:
+                middle = (low + high + 1) // 2
+                last["text"] = text[:middle]
+                data["next_text_offset"] = last["text_offset"] + middle
+                if size() <= budget:
+                    low = middle
+                else:
+                    high = middle - 1
+            last["text"] = text[:low]
+            data["next_text_offset"] = last["text_offset"] + low
+            if low == 0:
+                if len(pages) == 1:
+                    raise ToolError(
+                        "response_too_large", "PDF metadata exceeds the response budget"
+                    )
+                pages.pop()
+            if size() <= budget:
+                break
+        return data
+
     while size() > budget:
         text = data.get("text")
         if isinstance(text, str) and len(text) > 512:

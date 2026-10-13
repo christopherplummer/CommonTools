@@ -1,9 +1,12 @@
 import json
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from io import BytesIO
 
 import httpx
 import pytest
+from pypdf import PdfWriter
+from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
 
 from web_tools.config import Settings
 
@@ -55,7 +58,44 @@ def search_transport():
 
 
 @pytest.fixture
-def fixture_site():
+def pdf_bytes():
+    """Build real PDF bytes with a standard font and extractable page text."""
+
+    def build(texts=("First PDF page", "Second PDF page"), *, encrypted=False, compressed=False):
+        writer = PdfWriter()
+        font = writer._add_object(
+            DictionaryObject(
+                {
+                    NameObject("/Type"): NameObject("/Font"),
+                    NameObject("/Subtype"): NameObject("/Type1"),
+                    NameObject("/BaseFont"): NameObject("/Helvetica"),
+                }
+            )
+        )
+        for text in texts:
+            page = writer.add_blank_page(width=612, height=792)
+            page[NameObject("/Resources")] = DictionaryObject(
+                {NameObject("/Font"): DictionaryObject({NameObject("/F1"): font})}
+            )
+            content = DecodedStreamObject()
+            escaped = text.replace("\\", "\\\\").replace("(", "\\(").replace(")", "\\)")
+            content.set_data(f"BT /F1 12 Tf 50 700 Td ({escaped}) Tj ET".encode("ascii"))
+            if compressed:
+                content = content.flate_encode()
+            page[NameObject("/Contents")] = writer._add_object(content)
+        if encrypted:
+            writer.encrypt("fixture-password")
+        buffer = BytesIO()
+        writer.write(buffer)
+        return buffer.getvalue()
+
+    return build
+
+
+@pytest.fixture
+def fixture_site(pdf_bytes):
+    manual = pdf_bytes()
+
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
             if self.path.startswith("/search"):
@@ -84,6 +124,8 @@ def fixture_site():
                 return
             elif self.path == "/manual.txt":
                 body, content_type = b"Fixture manual: deterministic download.\n", "text/plain"
+            elif self.path == "/manual.pdf":
+                body, content_type = manual, "application/pdf"
             elif self.path == "/large":
                 body, content_type = b"x" * (2 * 1024 * 1024), "application/octet-stream"
             elif self.path == "/guide":

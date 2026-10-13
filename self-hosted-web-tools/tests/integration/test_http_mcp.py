@@ -98,3 +98,32 @@ async def test_real_http_and_redirects(settings, fixture_site):
             await http.read(f"{fixture_site}/private-redirect", 1000)
     finally:
         await http.close()
+
+
+def test_pdf_rest_download_read_auth_and_schema(settings, search_transport, fixture_site):
+    settings.test_allowed_origins = [fixture_site]
+    app = create_app(settings, search_transport=search_transport)
+    headers = {"Authorization": f"Bearer {settings.api_key.get_secret_value()}"}
+    with TestClient(app, base_url="http://127.0.0.1:8000") as client:
+        downloaded = client.post(
+            "/api/tools/file_download", headers=headers, json={"url": f"{fixture_site}/manual.pdf"}
+        ).json()
+        assert downloaded["success"]
+        arguments = {"file_id": downloaded["data"]["file_id"], "page_start": 2, "page_end": 2}
+        assert client.post("/api/tools/pdf_read", json=arguments).status_code == 401
+        read = client.post("/api/tools/pdf_read", headers=headers, json=arguments)
+        assert read.status_code == 200 and read.json()["success"]
+        assert read.json()["data"]["pages"][0]["text"] == "Second PDF page"
+        assert read.json()["data"]["pages"][0]["page_number"] == 2
+        for invalid in (
+            {"file_id": "../secret"},
+            {**arguments, "page_start": 0},
+            {**arguments, "path": "C:/secret.pdf"},
+        ):
+            assert (
+                client.post("/api/tools/pdf_read", headers=headers, json=invalid).status_code == 422
+            )
+        failed = client.post(
+            "/api/tools/pdf_read", headers=headers, json={**arguments, "page_end": 1}
+        )
+        assert failed.status_code == 400 and failed.json()["error"]["code"] == "invalid_page_range"

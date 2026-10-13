@@ -7,7 +7,8 @@ from web_tools.main import create_app
 
 
 @pytest.mark.integration
-async def test_official_sdk_client(settings, search_transport):
+async def test_official_sdk_client(settings, search_transport, fixture_site):
+    settings.test_allowed_origins = [fixture_site]
     app = create_app(settings, search_transport=search_transport)
     async with app.router.lifespan_context(app):
         async with httpx.AsyncClient(
@@ -26,6 +27,7 @@ async def test_official_sdk_client(settings, search_transport):
                         "file_download",
                         "file_inspect",
                         "file_list",
+                        "pdf_read",
                     }
                     result = await session.call_tool("web_search", {"query": "docs", "limit": 1})
                     assert not result.isError
@@ -33,3 +35,18 @@ async def test_official_sdk_client(settings, search_transport):
                     error = await session.call_tool("web_search", {"query": "docs", "limit": 100})
                     assert error.isError
                     assert error.structuredContent["error"]["code"] == "invalid_arguments"
+                    downloaded = await session.call_tool(
+                        "file_download", {"url": f"{fixture_site}/manual.pdf"}
+                    )
+                    assert not downloaded.isError
+                    read = await session.call_tool(
+                        "pdf_read", {"file_id": downloaded.structuredContent["data"]["file_id"]}
+                    )
+                    assert not read.isError
+                    assert [page["text"] for page in read.structuredContent["data"]["pages"]] == [
+                        "First PDF page",
+                        "Second PDF page",
+                    ]
+                    invalid = await session.call_tool("pdf_read", {"file_id": "../../secret"})
+                    assert invalid.isError
+                    assert invalid.structuredContent["error"]["code"] == "invalid_arguments"

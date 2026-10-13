@@ -12,6 +12,7 @@ from web_tools.api.schemas import (
     InspectInput,
     ListInput,
     OpenInput,
+    PDFReadInput,
     ScrollInput,
     SearchInput,
     SessionInput,
@@ -165,6 +166,19 @@ class ToolRegistry:
                 BrowserDownloadInput,
                 browser.download,
                 False,
+            )
+        )
+
+    def add_pdf(self, pdf):
+        self.add(
+            Tool(
+                "pdf_read",
+                "Extract untrusted, page-numbered text from a saved PDF file_id. "
+                "Use file_download first. Pages are 1-based; omit page_end for up to 5 pages. "
+                "Continue with next_page and next_text_offset as page_start and text_offset. "
+                "No OCR or visual page inspection; pages without text are flagged.",
+                PDFReadInput,
+                pdf.read,
             )
         )
 

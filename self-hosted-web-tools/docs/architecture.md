@@ -15,6 +15,7 @@ flowchart TD
     Registry --> Fetch[FetchService + Trafilatura]
     Registry --> Browser[BrowserService + session manager]
     Registry --> Download[DownloadService]
+    Registry --> PDF[PDFService + one-shot pypdf worker]
     Search --> SearXNG[SearXNG JSON API]
     Fetch --> SafeHTTP[HTTPX + pinned httpcore backend]
     Download --> SafeHTTP
@@ -22,6 +23,7 @@ flowchart TD
     Chromium --> SafeHTTP
     Browser --> Files[Managed files + SQLite]
     Download --> Files
+    PDF --> Files
     SafeHTTP --> Firewall[Restricted egress namespace]
     Firewall --> Internet[Public HTTP/HTTPS]
 ```
@@ -51,6 +53,13 @@ to SQLite. Failed/cancelled streams remove files. Completed artifacts, including
 screenshots, share the managed quota. No extraction model or inference server is
 involved. A crash between publication and SQLite commit can leave an orphan counted
 against quota; future maintenance should reconcile such files explicitly.
+
+PDFService resolves IDs through FileStore, checks file/range limits, and serializes
+extraction through a cancellable subprocess. pypdf reads the existing artifact;
+no PDF URL is fetched by the parser. The parent kills and reaps the worker on
+timeout/cancellation. Linux workers also have memory and CPU limits. PDF response
+compaction adjusts page/text continuation cursors when JSON escaping reduces the
+available output budget. Both transports discover the same registered `pdf_read`.
 
 Extension boundaries are intentionally modest: services/adapters and a registry,
 not queues or microservices. Add cache/extraction adapters when needed. Multiple

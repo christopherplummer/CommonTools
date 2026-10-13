@@ -27,6 +27,8 @@ the file. Unknown entries such as `SEARXNG_SECRET` belong to other services.
 | `MAX_TOOL_RESPONSE_CHARS` | `24000`, aggregate serialized data budget; lists/text shorten with truncation flags |
 | `MAX_FETCH_BYTES` | `2000000`, fetched body cap before parsing |
 | `MAX_SEARCH_BYTES` | `2000000`, SearXNG response cap |
+| `PDF_MAX_FILE_SIZE_MB` | `20` MiB maximum stored PDF accepted for reading (1–100) |
+| `PDF_MAX_PAGES_PER_CALL` | `20` pages maximum per read (1–100); default selection is up to 5 |
 | `ALLOWED_PORTS` | JSON `[80,443]`; firewall must also permit any changed ports |
 | `MCP_ALLOWED_HOSTS` | JSON localhost, loopback host patterns; needed for MCP host validation |
 | `LOG_LEVEL` | `INFO`, JSON events; access logging disabled to avoid URLs/secrets |

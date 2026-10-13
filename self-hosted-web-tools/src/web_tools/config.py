@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     max_tool_response_chars: int = Field(24000, ge=4000, le=100000)
     max_fetch_bytes: int = Field(2_000_000, ge=1024, le=10_000_000)
     max_search_bytes: int = Field(2_000_000, ge=1024)
+    pdf_max_file_size_mb: int = Field(20, ge=1, le=100)
+    pdf_max_pages_per_call: int = Field(20, ge=1, le=100)
     browser_max_response_bytes: int = Field(10_000_000, ge=1024, le=100_000_000)
     allowed_ports: list[int] = [80, 443]
     test_allowed_origins: list[str] = []

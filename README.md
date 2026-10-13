@@ -6,7 +6,7 @@ A collection of self-hosted tools for local language models and agent applicatio
 
 | Project | Description |
 | --- | --- |
-| [Self-hosted Web Tools](self-hosted-web-tools/README.md) | Authenticated REST and MCP tools for web search, page extraction, Chromium browsing, and persistent downloads. |
+| [Self-hosted Web Tools](self-hosted-web-tools/README.md) | Authenticated REST and MCP tools for web search, page and PDF text extraction, Chromium browsing, and persistent downloads. |
 
 Each project keeps its source, deployment configuration, tests, and documentation
 in its own directory. This folder is the Git repository root.

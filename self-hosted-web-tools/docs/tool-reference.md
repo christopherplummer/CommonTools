@@ -34,6 +34,7 @@ results include compact `warnings`.
 | `file_download` | `url`, optional `filename` (≤180 chars) | persistent streamed artifact metadata |
 | `browser_download` | `session_id`, `ref`, optional `filename` | captured link-download metadata; bounded bytes + Chromium Blob event |
 | `file_inspect` | `file_id` | saved artifact metadata; requires its file still exist |
+| `pdf_read` | `file_id`, `page_start=1`, optional `page_end`, `max_chars=12000` (100–100000, clamped to `MAX_FETCH_CHARS`), `text_offset=0` | total pages, page-numbered text, source URL and continuation cursors |
 | `file_list` | `limit=20` (1–100), `offset=0` | newest files, optional `next_offset` |
 
 URLs are ≤4096 characters, HTTP/HTTPS only, public addresses and allowed ports.
@@ -51,6 +52,37 @@ File metadata includes `file_id`, `original_url`, `filename`, `content_type`, `s
 `resource_uri`, `status="complete"`, and `kind`. `artifact://<id>` is an application
 identifier, not a registered MCP resource; fetch bytes through the authenticated
 HTTP artifact route. Files are never executed or parsed as instructions.
+
+## PDF reading
+
+Download a public PDF using `file_download` or `browser_download`, then supply the
+saved `file_id` to `pdf_read`. URLs and filesystem paths are not accepted by this
+tool. A PDF header is required; a `.pdf` extension or MIME type alone is insufficient.
+PDFs served as `application/octet-stream` can still be read.
+
+`page_start` and `page_end` are inclusive, 1-based page numbers. Omitting `page_end`
+selects up to 5 pages, subject to the configured per-call limit. Explicit ranges
+must fit both the document and `PDF_MAX_PAGES_PER_CALL`. Only stored PDFs up to
+`PDF_MAX_FILE_SIZE_MB` are read. There is no password argument.
+
+Each result includes `file_id`, `filename`, `source_url`, `untrusted=true`,
+`total_pages`, and `pages`. Each page contains `page_number`, `text`, `text_offset`,
+`has_text`, and `truncated`. Character limits apply across all returned page text.
+`has_text=false` means no text layer was extracted; it does not distinguish blank
+pages from scanned/graphics-only pages. OCR and visual/layout inspection are not
+implemented. Text order can differ from visual reading order in complex layouts.
+
+Continue while `next_page` is non-null, using `page_start=next_page` and
+`text_offset=next_text_offset`. The offset applies only to the first requested
+page. This preserves text even when a single page exceeds the character or JSON
+response budget. The cursor can point within the current page or to the next one.
+The envelope's `metadata.truncated` marks output curtailed within the selected
+range; a deliberate page-range selection can still have a next-page cursor.
+
+PDF error codes include `invalid_pdf`, `encrypted_pdf`, `pdf_too_large`,
+`pdf_resource_limit`, `pdf_page_limit`, `invalid_page_range`, `invalid_text_offset`,
+`unsupported_content_type`, and `file_not_found`. These return the common envelope
+and MCP `isError`, rather than parser diagnostics or document content in errors.
 
 ## Human approval
 

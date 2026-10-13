@@ -1,10 +1,10 @@
 # Self-hosted Web Tools
 
-Search, fetch readable webpages, browse with Chromium, and save downloads through
+Search, fetch readable webpages, read PDF text, browse with Chromium, and save downloads through
 one authenticated REST/MCP service. Runs without paid APIs or model inference.
 An agent application orchestrates the tools; Ollama alone does not manage MCP.
 
-The initial implementation includes 14 tools, SQLite file metadata, persistent
+The implementation includes 15 tools, SQLite file metadata, persistent
 download storage, task browser sessions, bounded responses, and network policy.
 See [tool reference](docs/tool-reference.md) for the exact contracts and limits.
 
@@ -81,6 +81,44 @@ is stateless, while browser sessions remain in the application keyed by explicit
 
 See [Open WebUI setup](docs/open-webui.md), [configuration](docs/configuration.md),
 and [security](docs/security.md) before using a different hostname or LAN access.
+
+## Reading PDFs in LM Studio and other MCP clients
+
+Connect to `http://127.0.0.1:8000/mcp` with the bearer header described above. In
+LM Studio, use Program → Install → Edit mcp.json and add this server entry:
+
+```json
+{
+  "mcpServers": {
+    "self-hosted-web-tools": {
+      "url": "http://127.0.0.1:8000/mcp",
+      "headers": {"Authorization": "Bearer YOUR_API_KEY"}
+    }
+  }
+}
+```
+
+Use `API_KEY` from the `.env` beside this service's `docker-compose.yml`. Merge
+the entry if other servers already exist. After upgrading the service, reconnect
+the MCP server in LM Studio to refresh discovery.
+
+Ask the model to download the PDF with `file_download`, then call `pdf_read`
+with the returned `file_id`. For example:
+
+```json
+{"file_id":"0123456789abcdef0123456789abcdef","page_start":1,"page_end":5,"max_chars":12000}
+```
+
+Pages are numbered from 1. Omitting `page_end` reads up to 5 pages. The response
+includes page-numbered text, the source URL, total page count, and continuation
+cursors. If `next_page` is non-null, pass it as `page_start` and pass
+`next_text_offset` as `text_offset` to continue, including within a long page.
+The tool also supports REST at `POST /api/tools/pdf_read` with the same arguments.
+
+Text extraction supports ordinary PDFs with a text layer. Pages with no
+extractable text have `has_text=false`; they may be blank, scanned or graphics-only.
+OCR, visual page rendering, and password-protected PDFs are unsupported. Reading
+does not execute embedded PDF scripts. PDF text remains untrusted content.
 
 ## Browser and file behavior
 
@@ -174,7 +212,7 @@ IPv4 outbound; native execution also supports public IPv6. Custom outbound ports
 need changes to both application configuration and the firewall.
 
 The service trusts one API principal. It has no per-user isolation, OAuth, job
-queue, caching, PDF extraction, persistent authenticated browser profiles, or
+queue, caching, PDF OCR/rendering, persistent authenticated browser profiles, or
 arbitrary JavaScript tool. Next priorities are per-client ownership and rate
-limits, richer download actions with explicit approvals, and extraction/caching.
+limits, richer download actions with explicit approvals, and OCR/caching.
 Fetched content can contain prompt injection; clients must treat it as data.

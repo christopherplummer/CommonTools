@@ -5,13 +5,16 @@ image uses Linux amd64 and the locked dependency set.
 
 | Check | Observed result |
 | --- | --- |
-| Windows Pytest | 64 passed, 1 dependency deprecation warning |
-| Linux image Pytest, `--network none` | 64 passed, 1 dependency deprecation warning |
+| Windows Pytest | 83 passed, 1 dependency deprecation warning |
+| Linux image Pytest, `--network none` | 83 passed, 1 dependency deprecation warning |
 | Ruff lint and formatting | passed |
 | Python sdist and wheel | built successfully; sdist contained no `.env`, `.tmp` or `.venv` entries |
 | Compose build/start | app, SearXNG and egress containers started and became healthy |
 | Liveness/readiness | HTTP 200; SearXNG, SQLite, managed storage and Chromium healthy |
 | Official MCP SDK client | initialization, discovery and invocation passed in tests and over live HTTP |
+| PDF discovery and extraction | live MCP advertised 15 tools including `pdf_read`; REST and official MCP SDK returned matching PDF text |
+| Live public PDF | W3C `https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf` downloaded; 1 page and 14 text characters extracted |
+| PDF limits and continuation | real PDF fixtures covered page ranges, long-page continuation, character budgets, blank pages, MIME/filename mismatch, encrypted/malformed files, missing artifacts, file/page limits, oversized decompressed streams and parser termination on deadline |
 | Live public search | real SearXNG/Bing results returned through MCP |
 | Live fetch | `https://example.com` extracted successfully |
 | Live direct download | 577-byte HTML file persisted with verified SHA-256 |
@@ -78,9 +81,12 @@ Update deliberately after reviewing/testing upstream changes.
 2. Richer explicitly approved browser downloads, multiple tabs and more accessible
    element representations (current element enumeration covers the main document).
 3. Cached search/page results and provider diagnostics to reduce upstream requests.
-4. PDF/Office extraction, authenticated profiles, scheduled jobs and observability.
+4. PDF OCR/rendering, Office extraction, authenticated profiles, scheduled jobs and observability.
 
 Current restrictions: one application worker, one tab per task session, GET-only
 browser traffic, no public deployment/OAuth, no browser button/script download,
-no persisted browser profiles, and no model-specific orchestration. All 14 exposed
+no persisted browser profiles, and no model-specific orchestration. All 15 exposed
 tools contain working implementations; these future capabilities are not stubs.
+PDF text extraction uses locked pypdf 6.20.1; it requires a text layer and does not
+perform OCR or visual page inspection. The local Compose app was rebuilt and
+became healthy after this addition; LM Studio must reconnect to refresh tool discovery.
