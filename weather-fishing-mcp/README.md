@@ -63,7 +63,10 @@ with your checkout; schemas are discoverable through `tools/list`):
       "command": "C:/Projects/CommonTools/weather-fishing-mcp/.venv/Scripts/python.exe",
       "args": ["-m", "weather_fishing", "--transport", "stdio"],
       "cwd": "C:/Projects/CommonTools/weather-fishing-mcp",
-      "env": {"WF_USER_AGENT": "YourFishingApp/1.0 (your-contact)"}
+      "env": {
+        "WF_USER_AGENT": "YourFishingApp/1.0 (your-contact)",
+        "WF_DEFAULT_UNITS": "metric"
+      }
     }
   }
 }
@@ -72,6 +75,18 @@ with your checkout; schemas are discoverable through `tools/list`):
 `cwd` is client-specific. If your client does not support it, use an absolute
 path to the installed `weather-fishing-mcp` executable and supply settings through
 the client process environment. Stdio relies on process/OS access controls.
+
+Set `WF_DEFAULT_UNITS` in the MCP entry's `env` to `metric`, `imperial` or `source`.
+It defaults to `metric`. A tool call that omits `units` uses this preference,
+including calls inside `collect_conditions`; an explicit per-call `units` overrides
+it. MCP discovery advertises the configured default so clients do not substitute
+a hard-coded metric default. Environment values override `.env`. Restart/reload
+the server after changes to refresh settings and tool discovery.
+
+When using a saved prompt, remove an explicit `units: metric` instruction if you
+want it to follow your configured preference. Source-only fields retain their
+provider units with existing qualifications; the setting does not add unsupported
+conversions. Invalid preference values fail settings validation at startup.
 
 ## Connect with authenticated HTTP
 

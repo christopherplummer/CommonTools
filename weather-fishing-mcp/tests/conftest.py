@@ -43,7 +43,9 @@ class FixtureHTTP:
 
 @pytest.fixture
 def service(tmp_path):
-    settings = Settings(_env_file=None, quota_database=tmp_path / "quota.sqlite3")
+    settings = Settings(
+        _env_file=None, quota_database=tmp_path / "quota.sqlite3", default_units="metric"
+    )
     return Service(settings, FixtureHTTP(settings))
 
 

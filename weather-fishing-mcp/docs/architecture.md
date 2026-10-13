@@ -20,6 +20,14 @@ qualifications. NOAA/NDBC source quality flags and absent values remain visible.
 
 ## Time and spatial relevance
 
+`WF_DEFAULT_UNITS` supplies a validated metric/imperial/source preference. The
+registry resolves omitted unit arguments before request validation without mutating
+the caller's arguments; bundle members use the same dispatch path. Explicit unit
+choices override the preference. MCP discovery substitutes the configured schema
+default and startup instructions describe it, keeping host defaults aligned with
+the server. The setting applies existing conversions and does not synthesize new
+conversions for source-only quantities.
+
 Tool date ranges are inclusive dates in the requested IANA timezone, translated
 to UTC instants for timestamped upstream products. CO-OPS always receives `gmt`,
 preserving the source setting separately from output timezone. Tide datum is a

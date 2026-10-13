@@ -128,3 +128,27 @@ The expanded suite passes **60 tests** (10.84 seconds), including desktop launch
 compatibility/opt-out, unavailable-result text, and actual local HTTP forecast JSON
 with pagination. Ruff lint and formatting also pass. Restart the running MCP server
 after this change; already-loaded processes retain the previous code.
+
+## Configurable unit-preference follow-up
+
+Added validated `WF_DEFAULT_UNITS` (`metric`, `imperial`, `source`; default `metric`).
+Individual tools and bundled calls inherit it when `units` is omitted. Explicit
+arguments override it. Tool discovery advertises the configured default and startup
+instructions explain the preference. No additional conversions were added for
+source-only quantities.
+
+The expanded suite passes **77 tests** (15.91 seconds). Preference tests cover
+environment validation, all three MCP schema defaults through actual stdio clients,
+weather/tide/NCEI request units, buoy numeric conversion, explicit overrides within
+bundles, invalid explicit units and preservation of caller arguments. Ruff lint and
+formatting pass for all 24 Python files.
+
+A separate actual public request used the desktop launcher with
+`WF_DEFAULT_UNITS=imperial` and a three-call bundle for Ruskin on October 16, 2026:
+NWS returned Fahrenheit/mph, the Little Manatee River tide request returned feet,
+and an explicit metric override returned meters. Both tide requests contained the
+same two event timestamps and heights agreed after feet-to-meters conversion within
+0.005 m. Weather was partial solely because the request limited output to two
+forecast periods; both tide responses were complete. No fixture supplied this live
+data. Text JSON matched the structured result, and discovery advertised imperial.
+This verifies the launcher/protocol path; the LM Studio UI/model was not automated.

@@ -26,6 +26,8 @@ def create_server(service):
             "datum and qualifications. Never treat unavailable or fixture data "
             "as retrieved evidence. "
             "SolunarForecast is the sole solunar source; no substitute or model-memory data."
+            f" Configured default units: {service.settings.default_units}. "
+            "Omit units to use this preference unless the user requests another unit system."
         ),
     )
 
@@ -35,7 +37,7 @@ def create_server(service):
             types.Tool(
                 name=t.name,
                 description=t.description,
-                inputSchema=t.schema.model_json_schema(),
+                inputSchema=t.input_schema(service.settings.default_units),
                 outputSchema=t.output.model_json_schema(),
                 annotations=types.ToolAnnotations(
                     readOnlyHint=True, destructiveHint=False, openWorldHint=True

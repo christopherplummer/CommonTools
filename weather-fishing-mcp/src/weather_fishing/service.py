@@ -23,6 +23,7 @@ from .models import (
     FishingInput,
     ForecastInput,
     ObservationsInput,
+    Query,
     Record,
     Result,
     SolunarInput,
@@ -38,6 +39,12 @@ class Tool:
     handler: object
     kind: str
     output: type = Result
+
+    def input_schema(self, default_units):
+        schema = self.schema.model_json_schema()
+        if "units" in schema.get("properties", {}):
+            schema["properties"]["units"]["default"] = default_units
+        return schema
 
 
 class Service:
@@ -160,6 +167,8 @@ class Service:
             provider=q.provider or "catalog",
             kind="capabilities",
             qualifications=[
+                f"Configured default units: {self.settings.default_units}; "
+                "explicit tool units override this preference",
                 (
                     "Integration plan/review record dated 2026-10-13, not proof of access "
                     "rights or production readiness"
@@ -221,6 +230,10 @@ class Service:
                     ],
                 )
             return await self.bundle(q)
+        # Resolve defaults before validation without mutating the caller's arguments.
+        # Bundles route their individual calls here too, so preferences apply there.
+        if issubclass(tool.schema, Query) and "units" not in arguments:
+            arguments = {**arguments, "units": self.settings.default_units}
         try:
             q = tool.schema.model_validate(arguments)
         except ValidationError as exc:

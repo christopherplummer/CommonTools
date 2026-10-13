@@ -4,6 +4,8 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
+UnitSystem = Literal["metric", "imperial", "source"]
+
 Provider = Literal[
     "nws",
     "coops",
@@ -58,7 +60,13 @@ class Location(Input):
 class Query(Input):
     location: Location
     timezone: str = Field(default="UTC", description="Requested output IANA timezone")
-    units: Literal["metric", "imperial", "source"] = "metric"
+    units: UnitSystem = Field(
+        default="metric",
+        description=(
+            "Omit to use the server's WF_DEFAULT_UNITS preference; an explicit value "
+            "overrides that preference where supported. Source-only fields retain their units."
+        ),
+    )
     start_date: date | None = Field(
         default=None, description="Inclusive date in requested timezone"
     )

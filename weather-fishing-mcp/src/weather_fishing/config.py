@@ -3,11 +3,17 @@ from pathlib import Path
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from .models import UnitSystem
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="WF_", env_file=".env", extra="ignore")
 
     user_agent: str = "CommonTools-WeatherFishing/0.1"
+    default_units: UnitSystem = Field(
+        default="metric",
+        description="Default tool units when omitted; explicit tool arguments override",
+    )
     api_key: SecretStr = SecretStr("")
     ncei_token: SecretStr = SecretStr("")
     solunar_permission_reference: str = ""

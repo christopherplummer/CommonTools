@@ -17,7 +17,8 @@ servers. If the file is empty, the complete configuration is:
       "command": "C:/Projects/CommonTools/weather-fishing-mcp/.venv/Scripts/python.exe",
       "args": ["C:/Projects/CommonTools/weather-fishing-mcp/scripts/run_stdio.py"],
       "env": {
-        "WF_USER_AGENT": "CommonTools-Fishing/0.1 (replace-with-your-contact)"
+        "WF_USER_AGENT": "CommonTools-Fishing/0.1 (replace-with-your-contact)",
+        "WF_DEFAULT_UNITS": "imperial"
       }
     }
   }
@@ -29,6 +30,17 @@ launcher sets the working directory to this project, so a local `.env` and the
 relative quota database path work even if the host's launch directory is different.
 Use these paths only for this machine/checkout; adjust them on another computer.
 
+`WF_DEFAULT_UNITS` selects your preferred unit system: `metric`, `imperial`, or
+`source`. The server uses `metric` if the setting is absent. Calls without `units`
+inherit this preference; explicit per-call units still win, including within a
+bundled snapshot. Tool discovery shows the configured default. Reload/restart the
+server after changing it. Remove explicit metric instructions from older prompts
+when you want them to follow the preference.
+
+Imperial preferences request Fahrenheit/mph for NWS period forecasts, feet for
+CO-OPS heights and knots for CO-OPS currents/NDBC winds where supported. Marine
+text/grid and source-only scientific fields keep their labeled source units.
+
 Save the file. LM Studio's documentation says it automatically loads configured
 servers after saving. Confirm that weather-fishing is connected and its 11 tools
 are listed/enabled in your chat. Load a model capable of tool use and try:
@@ -38,7 +50,8 @@ are listed/enabled in your chat. Load a model capable of tool use and try:
 Then try a compact actual data query:
 
 > Use get_forecast for latitude 38.9, longitude -77.0. Return the next three periods
-> with temperature and windSpeed, metric units, America/New_York timezone.
+> with temperature and windSpeed, America/New_York timezone. Omit the units argument
+> so the server uses my configured default unit preference. Include the returned units.
 
 The server process, discovery and result schema were checked with the official MCP
 SDK. That is not an end-to-end verification of LM Studio or your selected model.

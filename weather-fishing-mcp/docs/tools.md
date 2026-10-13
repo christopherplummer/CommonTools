@@ -20,7 +20,10 @@ are inclusive ISO dates; a lone start date means one day. Most timestamped produ
 filter using UTC bounds translated from these dates. CDO and Solunar preserve their
 source calendar date labels; they are not assigned fake timestamps.
 
-`units` is `metric`, `imperial` or `source`. Supported upstream conversions are
+`units` is `metric`, `imperial` or `source`. Omit it to use `WF_DEFAULT_UNITS` from
+the server environment/MCP entry (defaults to `metric`). An explicit argument
+overrides the preference; this rule also applies to each bundled request. The
+discovered schema advertises the configured default. Supported upstream conversions are
 requested explicitly. Marine text/grid and recent NWS observation quantities retain
 source units and say so; they return partial for unsupported conversion requests.
 NDBC converts temperature, wind, wave height, visibility and tide height where
