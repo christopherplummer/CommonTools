@@ -17,3 +17,6 @@ class Settings(BaseSettings):
     max_response_bytes: int = Field(default=5_000_000, ge=1000, le=10_000_000)
     cache_entries: int = Field(default=48, ge=0, le=128)
     cache_bytes: int = Field(default=20_000_000, ge=0, le=100_000_000)
+    text_results: bool = Field(
+        default=False, description="Include bounded JSON in MCP text content for text-only clients"
+    )

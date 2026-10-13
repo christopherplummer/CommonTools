@@ -46,6 +46,9 @@ review and adapter implementation must precede activation.
 
 ## Connect with stdio
 
+For LM Studio, use the [installation guide](docs/lm-studio.md), including a launcher
+that sets this project's working directory before reading local settings.
+
 ```powershell
 .venv\Scripts\python -m weather_fishing --transport stdio
 ```
@@ -126,10 +129,13 @@ These are calls, not fixture data. The full examples cover all 11 tools in
 
 ## Context and output bounds
 
-Tool results contain a compact `structuredContent` object plus a short text status,
-so JSON is not duplicated in two model-visible channels. Use an MCP client that
-supports structured tool results. Text-only legacy clients will see just the status.
-This is ordinary MCP structured output, not an HTTP endpoint returning bare JSON.
+By default, tool results contain a compact `structuredContent` object plus a short
+text status. `WF_TEXT_RESULTS=true` also includes the bounded JSON in text content
+for hosts that pass only text to their model. The LM Studio launcher enables this
+compatibility setting by default; restart it after updating. The structured JSON
+is retained for protocol/schema compatibility. Clients exposing both channels can
+set `WF_TEXT_RESULTS=false` to avoid duplicate data. This is an MCP tool result,
+not an HTTP endpoint returning bare JSON.
 
 Each data tool defaults to 100 records (maximum 500), supports `fields`, and limits
 its serialized result to roughly 60 KB plus a small truncation explanation. Paging

@@ -1,4 +1,5 @@
 import asyncio
+import json
 import socket
 import sys
 from pathlib import Path
@@ -201,10 +202,62 @@ async def test_official_sdk_stdio_discovery_and_structured_output():
             assert len(result.content[0].text) < 120
 
 
-async def test_http_authentication_and_sdk_roundtrip(service):
+@pytest.mark.parametrize("override", [None, "false"])
+async def test_desktop_launcher_text_results_and_override(override):
+    root = Path(__file__).resolve().parents[1]
+    env = {
+        "PYTHONPATH": str(root / "src"),
+        "WF_SOLUNAR_PERMISSION_REFERENCE": "",
+        "WF_NCEI_TOKEN": "",
+    }
+    if override is not None:
+        env["WF_TEXT_RESULTS"] = override
+    config = StdioServerParameters(
+        command=sys.executable,
+        args=[str(root / "scripts/run_stdio.py")],
+        cwd=str(root.parent),
+        env=env,
+    )
+    async with asyncio.timeout(20):
+        async with stdio_client(config) as (read, write):
+            async with ClientSession(read, write) as session:
+                await session.initialize()
+                result = await session.call_tool("provider_capabilities", {"provider": "nws"})
+                if override == "false":
+                    assert len(result.content[0].text) < 120
+                else:
+                    payload = json.loads(result.content[0].text)
+                    assert payload == result.structuredContent
+                    assert payload["records"][0]["values"]["id"] == "nws"
+                    unavailable = await session.call_tool(
+                        "get_forecast", {"provider": "bom", "location": {"city": "Sydney"}}
+                    )
+                    failed = json.loads(unavailable.content[0].text)
+                    assert failed == unavailable.structuredContent
+                    assert failed["status"] == "unavailable" and failed["reasons"]
+
+
+async def test_http_authentication_and_sdk_roundtrip(service, point):
     from pydantic import SecretStr
 
     service.settings.api_key = SecretStr("x" * 40)
+    service.settings.text_results = True
+    service.http.add(
+        "/forecast",
+        {
+            "properties": {
+                "periods": [
+                    {
+                        "startTime": f"2026-10-14T{hour:02d}:00:00Z",
+                        "endTime": f"2026-10-14T{hour + 1:02d}:00:00Z",
+                        "temperature": 20,
+                        "windSpeed": "10 km/h",
+                    }
+                    for hour in range(4)
+                ]
+            }
+        },
+    )
     app = create_app(service.settings, service)
     sock = socket.socket()
     sock.bind(("127.0.0.1", 0))
@@ -233,6 +286,18 @@ async def test_http_authentication_and_sdk_roundtrip(service):
                 await session.initialize()
                 result = await session.call_tool("provider_capabilities", {"provider": "nws"})
                 assert result.structuredContent["status"] == "complete"
+                result = await session.call_tool(
+                    "get_forecast",
+                    {"location": point, "fields": ["temperature", "windSpeed"], "limit": 3},
+                )
+                payload = json.loads(result.content[0].text)
+                assert payload == result.structuredContent
+                assert payload["status"] == "partial" and len(payload["records"]) == 3
+                assert payload["records"][0]["values"] == {
+                    "temperature": 20,
+                    "windSpeed": "10 km/h",
+                }
+                assert payload["next_offset"] == 3
     finally:
         server.should_exit = True
         await asyncio.wait_for(task, 10)

@@ -1,8 +1,10 @@
 # MCP tool reference
 
 All tool schemas are discoverable through MCP `tools/list`. Inputs reject unknown
-fields. Results use `structuredContent`; text content is a short status, without a
-duplicate JSON payload. The following JSON objects show tool **arguments**, not
+fields. Results use `structuredContent`; text content is a short status by default.
+`WF_TEXT_RESULTS=true` includes the same bounded JSON in text for clients such as
+LM Studio that may pass only text to their model. The desktop launcher defaults to
+this compatibility setting. The following JSON objects show tool **arguments**, not
 mocked outputs or guaranteed live data.
 
 ## Shared location, time, units and paging

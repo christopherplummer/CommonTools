@@ -47,13 +47,18 @@ def create_server(service):
     @server.call_tool(validate_input=False)
     async def call_tool(name, arguments):
         result = await service.call(name, arguments or {})
-        # Avoid duplicating the JSON in both content and structuredContent.
+        # Some hosts expose only content to their model. Keep the protocol's
+        # structured output, and explicitly enable JSON text for those clients.
+        text = (
+            result.model_dump_json()
+            if service.settings.text_results
+            else (f"{name}: {result.status}. Use structuredContent for records and qualifications.")
+        )
         return types.CallToolResult(
             content=[
                 types.TextContent(
                     type="text",
-                    text=f"{name}: {result.status}. "
-                    "Use structuredContent for records and qualifications.",
+                    text=text,
                 )
             ],
             structuredContent=result.model_dump(mode="json"),

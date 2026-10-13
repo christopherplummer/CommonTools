@@ -96,3 +96,35 @@ a separate historical current station worked.
 
 See [provider source/access review](providers.md) for current source links and the
 distinction between published provider requirements and conservative local policy.
+
+## LM Studio setup follow-up
+
+Added `scripts/run_stdio.py` and [LM Studio setup instructions](lm-studio.md).
+The launcher was checked with the official MCP SDK from a different initial working
+directory: initialization succeeded, all 11 tools were discovered, and a structured
+NWS capability response was returned. The launcher sets the project directory so
+local `.env` settings and relative quota storage resolve consistently.
+LM Studio itself and a particular local model have not been exercised end to end;
+in particular, model-visible handling of `structuredContent` remains to be checked.
+
+## LM Studio text-result compatibility correction
+
+The user subsequently reported that LM Studio's model saw only the short status
+text and missed the forecast JSON in `structuredContent`. Added `WF_TEXT_RESULTS`
+and enabled it by default in the desktop launcher. This sends the same bounded JSON
+in text content while retaining the structured result required by the tool schema.
+Generic server startup keeps compact structured mode by default; client environment
+`WF_TEXT_RESULTS=false` explicitly opts out of desktop compatibility mode.
+
+The exact reported DC forecast query was rechecked through the stdio desktop
+launcher against live NWS data on October 13, 2026 at 9:55 a.m. Eastern. Text JSON
+equaled `structuredContent`, contained three temperature/windSpeed records, and was
+1750 UTF-8 bytes. The sole partial reason was output pagination, with `next_offset=3`.
+No fixture supplied these records. See [compatibility check metadata](lm-studio-compat-verification.json).
+The LM Studio application itself was not automated; its prior failure was reported
+by the user, and the corrected model-visible channel was verified with the SDK.
+
+The expanded suite passes **60 tests** (10.84 seconds), including desktop launcher
+compatibility/opt-out, unavailable-result text, and actual local HTTP forecast JSON
+with pagination. Ruff lint and formatting also pass. Restart the running MCP server
+after this change; already-loaded processes retain the previous code.

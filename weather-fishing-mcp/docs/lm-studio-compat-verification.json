@@ -1,0 +1,20 @@
+{
+  "checked_at": "2026-10-13T13:55:34.899900+00:00",
+  "fixture_data_used": false,
+  "transport": "stdio via desktop launcher",
+  "text_json_equals_structured_content": true,
+  "status": "partial",
+  "record_count": 3,
+  "source_url": "https://api.weather.gov/gridpoints/LWX/98,72/forecast?units=si",
+  "retrieved_at": "2026-10-13T13:55:34.836223+00:00",
+  "fields": [
+    "temperature",
+    "windSpeed"
+  ],
+  "next_offset": 3,
+  "reasons": [
+    "Response page truncated; continue with next_offset"
+  ],
+  "text_bytes": 1750,
+  "lm_studio_app_verified": false
+}
